@@ -1,0 +1,62 @@
+generated: '2026-08-22'
+method: searched
+source: >-
+  https://iggenix.com/ and its WordPress REST route index at https://iggenix.com/wp-json/, probed
+  2026-08-22. Every field below reports what IgGenix actually publishes; the honest answer to most of
+  them is nothing.
+summary: >-
+  IgGenix publishes no API lifecycle posture of any kind — no versioning policy, no deprecation policy,
+  no sunset headers, no SLA, no status page and no changelog. This is expected: it does not run a
+  developer program, and the surface profiled here is the WordPress REST API its marketing site exposes
+  incidentally. The version below is WordPress core's namespace, not an IgGenix contract.
+versioning:
+  scheme: uri-namespace
+  current: wp/v2
+  policy_url: null
+  policy_published: false
+  note: >-
+    Version is a path namespace inherited from WordPress core. The full namespace list is discoverable at
+    https://iggenix.com/wp-json/ (oembed/1.0, wpe/cache-plugin/v1, wpe_sign_on_plugin/v1, wp/v2,
+    wp-site-health/v1, wp-block-editor/v1, wp-abilities/v1). IgGenix does not control or announce it.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No Sunset or Deprecation response header was observed on any endpoint, and no deprecation policy is
+    published. No Deprecation pointer is emitted in apis.yml.
+sla:
+  url: null
+  published: false
+  uptime_target: null
+status_page:
+  url: null
+  published: false
+  probed:
+  - url: https://status.iggenix.com/
+    result: does not resolve
+  note: >-
+    No status page exists on any IgGenix host. The underlying platform status is WP Engine's
+    (https://wpenginestatus.com/), which is the host's page and not IgGenix's, so no StatusPage pointer
+    is emitted.
+changelog:
+  url: null
+  published: false
+  note: >-
+    No API changelog. The company's dated public record is its press-release archive, captured in
+    changelog/iggenix-changelog.yml as a corporate — not API — changelog, and it is not wired as a
+    ChangeLog pointer because it does not describe changes to an API.
+deprecated_operations: []
+maturity:
+  stage: incidental
+  note: >-
+    The API is a by-product of the CMS, not a product. Treat every route as subject to change without
+    notice whenever the site is rebuilt or a plugin is added or removed — the wpe_sign_on_plugin/v1 and
+    wpe/cache-plugin/v1 namespaces present today are host plugins that can disappear with a hosting change.
+observed_currency:
+  most_recent_press_release: '2025-09-02'
+  most_recent_publication: '2026-06-29'
+  feed_last_build_date: '2026-06-30T00:31:50+00:00'
+  note: Read from the live collections on 2026-08-22; the content surface is maintained, if infrequently.

@@ -1,0 +1,156 @@
+generated: '2026-08-22'
+method: derived
+source: >-
+  openapi/_original/iggenix-content-openapi.yml plus the live registries at
+  https://iggenix.com/wp-json/wp/v2/types, /taxonomies and /statuses, read 2026-08-22.
+summary: >-
+  The entity graph is WordPress's content model as IgGenix has configured it: four content post types —
+  three of which (pressreleases, publications, abstracts) are the company's real public record — plus
+  core pages, media, users and taxonomies. Volumes below were read from the X-WP-Total header on each
+  live collection, so they are counts, not estimates.
+identifiers:
+  scheme: integer post ID, unique across all post types
+  note: >-
+    Ids are shared across post types: id 525 is a press release and id 530 is a publication, and asking
+    for a publications id under /wp/v2/posts returns 404 rest_post_invalid_id. Always resolve the subtype
+    before dereferencing — GET /wp/v2/search returns both the id and its subtype, which is the reliable
+    entry point.
+  secondary_keys: [slug, link, guid]
+entities:
+- name: PressRelease
+  rest_base: pressreleases
+  post_type: pressreleases
+  hierarchical: false
+  count: 20
+  collection: /wp/v2/pressreleases
+  item: /wp/v2/pressreleases/{id}
+  description: Corporate and clinical announcements — financings, trial milestones, conference presentations.
+  fields: [id, date, date_gmt, modified, modified_gmt, slug, status, type, link, title, content, excerpt, featured_media, template, class_list, acf, guid, _links]
+- name: Publication
+  rest_base: publications
+  post_type: publications
+  hierarchical: false
+  count: 9
+  collection: /wp/v2/publications
+  item: /wp/v2/publications/{id}
+  description: The company's peer-reviewed literature record; each item links out to the journal.
+  fields: [id, date, date_gmt, modified, modified_gmt, slug, status, type, link, title, template, class_list, acf, guid, _links]
+- name: Abstract
+  rest_base: abstracts
+  post_type: abstracts
+  hierarchical: false
+  count: 14
+  collection: /wp/v2/abstracts
+  item: /wp/v2/abstracts/{id}
+  description: Conference abstracts and posters, most of which link to a PDF in the media library.
+  fields: [id, slug, status, type, link, title, template, class_list, acf, guid, _links]
+- name: Career
+  rest_base: careers
+  post_type: careers
+  hierarchical: false
+  count: 0
+  collection: /wp/v2/careers
+  description: Registered post type with no published items. Open roles are handled by email (HR@IgGenix.com).
+- name: Post
+  rest_base: posts
+  post_type: post
+  count: 0
+  collection: /wp/v2/posts
+  description: Core blog collection, unused on this site. News lives under pressreleases instead.
+- name: Page
+  rest_base: pages
+  post_type: page
+  hierarchical: true
+  count: 27
+  collection: /wp/v2/pages
+  description: >-
+    Marketing pages including the team hierarchy (management, board, scientific advisory board,
+    co-founders) and the privacy policy (id 3). Notable: these are only reliably reachable through this
+    API — their HTML URLs currently serve another company's home page.
+- name: Media
+  rest_base: media
+  post_type: attachment
+  count: 76
+  collection: /wp/v2/media
+  description: Images and PDFs, including the published conference posters linked from abstracts.
+- name: Comment
+  rest_base: comments
+  count: 0
+  collection: /wp/v2/comments
+  description: Unused on this site.
+- name: User
+  rest_base: users
+  count: 'not disclosed (collection returns items; total header omitted for this route)'
+  collection: /wp/v2/users
+  description: >-
+    WordPress author accounts. Returns display name, slug, author-archive link and Gravatar hashes
+    anonymously. Flagged as personal data — documented structurally, excluded from the generated agent
+    skills and MCP tool candidates.
+  personal_data: true
+- name: Category
+  rest_base: categories
+  taxonomy: category
+  count: 1
+  applies_to: [post]
+  description: One term (Uncategorized). Unused in practice.
+- name: Tag
+  rest_base: tags
+  taxonomy: post_tag
+  count: 0
+  applies_to: [post]
+relationships:
+- from: PressRelease
+  to: Media
+  type: has_one
+  via: featured_media
+  note: Integer attachment id; resolve at /wp/v2/media/{id} or inline with _embed.
+- from: Publication
+  to: Media
+  type: has_one
+  via: featured_media
+- from: Abstract
+  to: Media
+  type: has_one
+  via: featured_media
+- from: Post
+  to: Category
+  type: has_many
+  via: categories
+- from: Post
+  to: Tag
+  type: has_many
+  via: tags
+- from: Page
+  to: Page
+  type: belongs_to
+  via: parent
+  note: Pages are hierarchical — the team pages nest under /the-iggenix-team/.
+- from: Comment
+  to: Post
+  type: belongs_to
+  via: post
+- from: Media
+  to: Page
+  type: belongs_to
+  via: post
+  note: The item the attachment was uploaded to, when any.
+- from: PressRelease
+  to: User
+  type: belongs_to
+  via: author
+  note: Personal data. Present in the payload; not surfaced in skills.
+- from: SearchResult
+  to: PressRelease|Publication|Abstract|Page
+  type: has_one
+  via: subtype + _links.self.href
+  note: >-
+    The polymorphic entry point. A search hit carries id, title, url, type and subtype plus an embeddable
+    self href, which is how an agent turns a query into a typed resource in two calls.
+statuses:
+  registered: [publish, acf-disabled]
+  note: Only published content is visible anonymously.
+taxonomy_registry:
+  categories: {rest_base: categories, types: [post]}
+  post_tag: {rest_base: tags, types: [post]}
+  note: The three content post types carry no taxonomy at all — they are organized by type, not by term.
+render: null

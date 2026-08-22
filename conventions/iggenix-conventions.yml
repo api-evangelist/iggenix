@@ -1,0 +1,162 @@
+generated: '2026-08-22'
+method: derived
+source: >-
+  openapi/_original/iggenix-content-openapi.yml (derived from https://iggenix.com/wp-json/) plus live
+  anonymous requests against https://iggenix.com/wp-json/wp/v2/*, 2026-08-22. Cross-cutting behaviour is
+  WordPress core REST behaviour, observed on this host rather than assumed.
+summary: >-
+  This is a WordPress core REST API, so every cross-cutting convention below is WordPress's, not a
+  design IgGenix authored. It is a well-behaved read surface — offset/page pagination with the count in
+  response headers, a consistent JSON error envelope, field selection via _fields, embedded relations via
+  _embed — and a poor write surface for agents: no idempotency keys, no dry-run, no request-id header,
+  and no reversal semantics beyond WordPress's own trash-and-restore.
+authentication:
+  style: HTTP Basic (WordPress Application Passwords)
+  anonymous_read: true
+  note: >-
+    The whole content read surface answers anonymously. Writes, and the authenticated-read routes
+    (/wp/v2/settings, /wp-abilities/v1/*), require an application password. Advertised by the host's own
+    route index under authentication.application-passwords.
+  authorization_endpoint: https://iggenix.com/wp-admin/authorize-application.php
+  see: authentication/iggenix-authentication.yml
+versioning:
+  style: uri-namespace
+  current: wp/v2
+  note: >-
+    The version is a namespace segment in the path (/wp-json/wp/v2/...). The route index at /wp-json/
+    enumerates every registered namespace, so a client can discover a version change. IgGenix publishes
+    no versioning policy of its own — the version tracks whatever WordPress core the site runs.
+  discovery: https://iggenix.com/wp-json/
+pagination:
+  style: page-and-per-page
+  params:
+  - name: page
+    default: 1
+    minimum: 1
+  - name: per_page
+    default: 10
+    minimum: 1
+    maximum: 100
+  - name: offset
+    note: Alternative to page; skips a fixed number of items.
+  response_headers:
+  - name: X-WP-Total
+    description: Total items in the unpaginated collection. Observed as 20 on pressreleases, 9 on publications, 14 on abstracts, 76 on media.
+  - name: X-WP-TotalPages
+    description: Total pages available at the current per_page.
+  - name: Link
+    description: RFC 8288 next/prev links.
+  cors_exposed: true
+  cors_note: 'The host sets access-control-expose-headers: X-WP-Total, X-WP-TotalPages, Link — so a browser client can read them.'
+field_selection:
+  sparse_fields:
+    param: _fields
+    description: Comma-separated list of top-level fields to return. Verified live — _fields=id,date,slug,link,title returns exactly those keys.
+  expansion:
+    param: _embed
+    description: Inlines linked resources (author, featured media, terms) into an _embedded block, resolving the _links graph in one round trip.
+  envelope:
+    param: _envelope
+    description: Wraps body, status and headers into a single JSON object for clients that cannot read response headers.
+  context:
+    param: context
+    values: [view, embed, edit]
+    default: view
+    description: Controls which fields are present. edit requires authentication.
+ordering_and_filtering:
+  order_params: [order, orderby]
+  filter_params: [search, after, before, modified_after, modified_before, include, exclude, slug, status, author, categories, tags]
+  note: Parameter names and allowed values are taken verbatim from the route index; see the per-operation parameters in openapi/.
+hypermedia:
+  style: HAL-like _links
+  description: >-
+    Every resource carries a _links object with self, collection, about (the post-type descriptor),
+    wp:attachment, curies and, on search results, an embeddable self href with a targetHints.allow array
+    naming the methods the caller may use. This is the most agent-useful property of the surface: a
+    search hit tells an agent exactly which route to follow next and which verbs are permitted.
+  discovery_header: 'Link: <https://iggenix.com/wp-json/>; rel="https://api.w.org/" is returned on every HTML page.'
+error_envelope:
+  format: wordpress-wp-error
+  rfc9457: false
+  content_type: application/json
+  shape: '{ "code": "<slug>", "message": "<human text>", "data": { "status": <http status> } }'
+  observed: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+  note: >-
+    Not RFC 9457 problem+json. The HTTP status is duplicated inside data.status, and code is a stable
+    machine-readable slug. See errors/iggenix-problem-types.yml.
+request_tracing:
+  request_id_header: none
+  note: >-
+    No X-Request-Id, X-Correlation-Id or equivalent is returned. Responses do carry WP Engine cache
+    headers (x-cache, x-cache-group, x-cacheable) which are operational, not correlational. An agent
+    that needs to report a failing call back to IgGenix has no identifier to quote.
+caching:
+  headers:
+  - 'cache-control: max-age=600, must-revalidate'
+  - 'vary: Accept-Encoding,Cookie'
+  - 'x-cacheable: SHORT'
+  - 'x-cache: HIT/MISS'
+  etag: false
+  conditional_requests: false
+  note: Edge-cached at WP Engine for ten minutes. No ETag or Last-Modified, so no conditional GET.
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    WordPress core has no idempotency-key mechanism. A retried POST to /wp/v2/pressreleases creates a
+    second post. No Idempotency pointer is emitted in apis.yml because there is nothing to point at —
+    asserting one would be a false claim on IgGenix's behalf.
+dry_run_mode:
+  supported: false
+  note: No preview, validate-only or simulate parameter exists on any write operation.
+reversibility:
+  grade: documented
+  na: false
+  note: >-
+    The write surface is authenticated-only, so no reversal path could be exercised; everything below is
+    read out of the route index's own parameter set on this host, not out of IgGenix documentation —
+    IgGenix publishes none. The reversal path exists and is discoverable; the WINDOW is not stated
+    anywhere by IgGenix, so this grades `documented` rather than `verified`. Nothing here asserts a
+    retention period, because no IgGenix page states one.
+  write_surfaces:
+  - surface: Content deletion (pressreleases, publications, abstracts, careers, posts, pages, media, comments)
+    destructive_operation: 'DELETE /wp/v2/{type}/{id}'
+    reversal: soft-delete to trash, then restore by setting status back to publish
+    reversal_operation: 'POST /wp/v2/{type}/{id} with {"status":"publish"}'
+    window: unstated
+    window_note: >-
+      DELETE without force=true moves the item to trash and it can be restored; DELETE with force=true is
+      permanent and has no reversal. How long a trashed item survives is governed by the site's
+      EMPTY_TRASH_DAYS configuration, which is not exposed on any anonymous endpoint and is not
+      documented by IgGenix, so no window is asserted here.
+    evidence: 'The force parameter is declared on every DELETE endpoint in the route index served at https://iggenix.com/wp-json/ with the description "Whether to bypass Trash and force deletion."'
+  - surface: Media deletion
+    destructive_operation: 'DELETE /wp/v2/media/{id}'
+    reversal: none
+    window: none
+    window_note: >-
+      Attachments are force-deleted by WordPress; the route index declares force as required on this
+      endpoint. There is no undo. This is the one write on the surface an agent cannot take back.
+  - surface: Settings mutation
+    destructive_operation: 'POST|PUT|PATCH /wp/v2/settings'
+    reversal: re-submit the previous values
+    window: unbounded
+    window_note: >-
+      Settings are last-write-wins with no history, so reversal is only possible if the caller captured
+      the prior state first. GET /wp/v2/settings is 401 anonymously, so an unauthenticated agent cannot
+      capture it.
+  read_only_surfaces:
+  - Search API
+  - Discovery API
+  - oEmbed API
+rate_limit_signaling:
+  headers: none
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header was returned on any observed response. See
+    rate-limits/iggenix-rate-limits.yml.
+cross_links:
+  errors: errors/iggenix-problem-types.yml
+  lifecycle: lifecycle/iggenix-lifecycle.yml
+  authentication: authentication/iggenix-authentication.yml
+  rate_limits: rate-limits/iggenix-rate-limits.yml
+  data_model: data-model/iggenix-data-model.yml

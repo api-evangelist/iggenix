@@ -1,0 +1,102 @@
+generated: '2026-08-22'
+method: derived
+source: >-
+  openapi/_original/iggenix-content-openapi.yml (derived from https://iggenix.com/wp-json/), live
+  responses from https://iggenix.com/wp-json/wp/v2/*, and https://iggenix.com/ probed 2026-08-22.
+summary: >-
+  Cross-cutting conformance is WordPress core's, and it is thin: HTTP Basic auth, an RFC 8288 Link
+  header, an oEmbed 1.0 provider, and nothing else. There is no OAuth, no OIDC, no RFC 9457, no
+  idempotency and no published compliance program. IgGenix's market — clinical-stage antibody
+  therapeutics — has real domain standards (HL7 FHIR, CDISC SDTM/ODM, ICH E2B, IDMP), but none of them
+  appear anywhere in this contract, and correctly so: this is a marketing-site content API, not a
+  clinical data exchange. domain_standard_conformance is recorded as not-applicable rather than false,
+  because inventing one to fill the slot would be worse than an honest absence.
+standards:
+- id: oauth2
+  conforms: false
+  evidence: 'No oauth2 securityScheme; /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource both 302 into the site root (catch-all, not a document).'
+- id: oidc
+  conforms: false
+  evidence: '/.well-known/openid-configuration returns the catch-all 302; no openIdConnect securityScheme.'
+- id: http-basic-rfc7617
+  conforms: true
+  evidence: >-
+    WordPress Application Passwords authenticate over HTTP Basic. Advertised by the host's own route
+    index at https://iggenix.com/wp-json/ under authentication.application-passwords with the
+    authorization endpoint https://iggenix.com/wp-admin/authorize-application.php.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors are the WordPress WP_Error envelope (code/message/data.status) served as application/json,
+    not application/problem+json. Observed: {"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}.
+- id: rfc8288-web-linking
+  conforms: true
+  evidence: >-
+    Collection responses return an RFC 8288 Link header carrying next/prev, and every HTML page returns
+    Link <https://iggenix.com/wp-json/>; rel="https://api.w.org/" as REST discovery.
+- id: pagination
+  conforms: true
+  evidence: 'page/per_page/offset parameters with X-WP-Total and X-WP-TotalPages response headers, both named in access-control-expose-headers. Verified live (X-WP-Total 20 on pressreleases).'
+- id: idempotency
+  conforms: false
+  evidence: No idempotency-key header or parameter exists on any write operation.
+- id: oembed-1.0
+  conforms: true
+  evidence: >-
+    The site registers an oEmbed 1.0 provider at /wp-json/oembed/1.0/embed and /wp-json/oembed/1.0/proxy
+    and advertises it from page HTML. Verified live — a request for the site root returns an oEmbed
+    JSON response (2,072 bytes).
+- id: rss-2.0
+  conforms: true
+  evidence: 'https://iggenix.com/feed/ returns a valid RSS 2.0 channel titled "IgGenix" with the content, wfw, dc, atom, sy and slash namespaces declared.'
+- id: sitemaps-0.9
+  conforms: true
+  evidence: 'https://iggenix.com/wp-sitemap.xml is a sitemaps.org 0.9 sitemapindex covering pages, publications, abstracts, pressreleases and users.'
+- id: robots-exclusion
+  conforms: true
+  evidence: 'https://iggenix.com/robots.txt returns 200; disallows /wp-admin/ only, sets Crawl-delay: 10, declares the sitemap. No AI-crawler directives in either direction.'
+- id: cors
+  conforms: partial
+  evidence: >-
+    access-control-allow-headers and access-control-expose-headers are set on REST responses, but no
+    access-control-allow-origin was returned to an anonymous cross-origin-style request, so a browser
+    client cannot read the surface directly.
+- id: json-api
+  conforms: false
+  evidence: Responses are plain JSON with a HAL-like _links block, not the JSON:API media type or document structure.
+- id: fhir-r4
+  conforms: false
+  evidence: No FHIR resource shapes, no /metadata CapabilityStatement, no fhir+json media type. Not expected — this is a CMS content API.
+- id: scim2
+  conforms: false
+  evidence: No urn:ietf:params:scim:schemas:* URN anywhere in the contract; /wp/v2/users is WordPress's own author collection.
+- id: odata
+  conforms: false
+  evidence: No $metadata document and no OData query options.
+domain_standard_conformance:
+  applicable: false
+  regime: life-sciences / clinical-stage biopharma
+  candidates_checked:
+  - id: hl7-fhir
+    found: false
+  - id: cdisc-sdtm-odm
+    found: false
+  - id: ich-e2b
+    found: false
+  - id: iso-idmp
+    found: false
+  - id: clinicaltrials-gov-prs
+    found: false
+  note: >-
+    IgGenix runs clinical trials (Phase 1 ACCELERATE Peanut, IGNX001) and therefore participates in
+    standards-bearing systems such as ClinicalTrials.gov, but it exposes no API into any of them. The
+    only contract it serves is its CMS content API, which has no domain standard to conform to. Recorded
+    as not-applicable — this is a reward-only dimension and IgGenix is not penalised for it.
+compliance_program:
+  published: false
+  certifications: []
+  trust_center: null
+  note: >-
+    No SOC 2, ISO 27001, HIPAA, GDPR or other compliance page is published on iggenix.com, and there is
+    no trust center. probe-security-programs.py returned vdp=none trust=none on 2026-08-22. No Compliance
+    pointer is emitted in apis.yml.

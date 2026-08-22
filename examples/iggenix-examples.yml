@@ -1,0 +1,104 @@
+generated: '2026-08-22'
+method: probed
+source: live anonymous requests against https://iggenix.com/wp-json/, 2026-08-22
+note: >-
+  Every example below is a real response captured from the live host, trimmed with _fields where noted.
+  Author names and Gravatar hashes returned by /wp/v2/users are deliberately NOT reproduced here — the
+  route is documented structurally in the OpenAPI and the data model, but no individual is named in this
+  repository.
+examples:
+- name: Search across every public post type
+  request: 'GET https://iggenix.com/wp-json/wp/v2/search?search=peanut'
+  status: 200
+  content_type: application/json
+  description: >-
+    The most useful single call on this surface. Returns a typed, polymorphic hit list — id, title, url,
+    type and subtype — with an embeddable self href per result, so an agent can go straight to the right
+    typed collection.
+  response: |
+    [
+      {
+        "id": 525,
+        "title": "IgGenix Announces Completion of Enrollment for Phase 1 Clinical Trial &#8220;ACCELERATE Peanut&#8221; with IGNX001 in Peanut Allergy",
+        "url": "https://iggenix.com/pressreleases/iggenix-announces-completion-of-enrollment-for-phase-1-clinical-trial-accelerate-peanut-with-ignx001-in-peanut-allergy/",
+        "type": "post",
+        "subtype": "pressreleases",
+        "_links": {
+          "self": [{"embeddable": true, "href": "https://iggenix.com/wp-json/wp/v2/pressreleases/525", "targetHints": {"allow": ["GET"]}}],
+          "about": [{"href": "https://iggenix.com/wp-json/wp/v2/types/pressreleases"}],
+          "collection": [{"href": "https://iggenix.com/wp-json/wp/v2/search"}]
+        }
+      }
+    ]
+- name: Latest press release, sparse fields
+  request: 'GET https://iggenix.com/wp-json/wp/v2/pressreleases?per_page=1&_fields=id,date,slug,link,title'
+  status: 200
+  description: Demonstrates _fields — the response carries exactly the requested keys and nothing else.
+  response_headers:
+    x-wp-total: '20'
+    x-wp-totalpages: '20'
+  response: |
+    [
+      {
+        "id": 525,
+        "date": "2025-09-02T09:15:00",
+        "slug": "iggenix-announces-completion-of-enrollment-for-phase-1-clinical-trial-accelerate-peanut-with-ignx001-in-peanut-allergy",
+        "link": "https://iggenix.com/pressreleases/iggenix-announces-completion-of-enrollment-for-phase-1-clinical-trial-accelerate-peanut-with-ignx001-in-peanut-allergy/",
+        "title": {"rendered": "IgGenix Announces Completion of Enrollment for Phase 1 Clinical Trial &#8220;ACCELERATE Peanut&#8221; with IGNX001 in Peanut Allergy"}
+      }
+    ]
+- name: Most recent peer-reviewed publication
+  request: 'GET https://iggenix.com/wp-json/wp/v2/publications?per_page=1&_fields=id,date,slug,link,title'
+  status: 200
+  response_headers:
+    x-wp-total: '9'
+  response: |
+    [
+      {
+        "id": 530,
+        "date": "2026-06-29T16:59:44",
+        "slug": "a-human-monoclonal-antibody-displays-promiscuous-binding-to-multiple-type-1-nsltp-allergens",
+        "link": "https://iggenix.com/publications/a-human-monoclonal-antibody-displays-promiscuous-binding-to-multiple-type-1-nsltp-allergens/",
+        "title": {"rendered": "A Human Monoclonal Antibody Displays Promiscuous Binding to Multiple Type 1 nsLTP Allergens"}
+      }
+    ]
+- name: Conference abstract
+  request: 'GET https://iggenix.com/wp-json/wp/v2/abstracts?per_page=1&_fields=id,slug,link,title'
+  status: 200
+  response_headers:
+    x-wp-total: '14'
+  response: |
+    [
+      {
+        "id": 465,
+        "slug": "preclinical-activity-and-glp-safety-toxicology-data-ahead-of-phase-1-initiation-of-ignx001-in-peanut-allergy",
+        "link": "https://iggenix.com/abstracts/preclinical-activity-and-glp-safety-toxicology-data-ahead-of-phase-1-initiation-of-ignx001-in-peanut-allergy/",
+        "title": {"rendered": "Preclinical Activity and GLP Safety Toxicology Data Ahead of Phase 1 Initiation of IGNX001 in Peanut&nbsp;Allergy"}
+      }
+    ]
+- name: Empty collection is a 200, not a 404
+  request: 'GET https://iggenix.com/wp-json/wp/v2/careers?per_page=1'
+  status: 200
+  response_headers:
+    x-wp-total: '0'
+    x-wp-totalpages: '0'
+  response: '[]'
+  description: >-
+    careers, posts, comments and tags are all registered but empty. An agent must read X-WP-Total rather
+    than infer absence from a status code.
+- name: Error envelope on an unknown id
+  request: 'GET https://iggenix.com/wp-json/wp/v2/posts/99999999'
+  status: 404
+  response: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+- name: Authentication-gated read
+  request: 'GET https://iggenix.com/wp-json/wp/v2/settings'
+  status: 401
+  response: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+  description: >-
+    Returned with no WWW-Authenticate header. The same body and status come back from
+    /wp-json/wp-abilities/v1/abilities.
+- name: oEmbed rejects an archive URL
+  request: 'GET https://iggenix.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Figgenix.com%2Fpublications%2F'
+  status: 404
+  response: '{"code":"oembed_invalid_url","message":"Not Found","data":{"status":404}}'
+  description: The oEmbed provider only resolves singular permalinks; pass a link from a content item instead.

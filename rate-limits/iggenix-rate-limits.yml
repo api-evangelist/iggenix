@@ -1,0 +1,51 @@
+generated: '2026-08-22'
+method: probed
+source: >-
+  Response headers observed on live anonymous requests to https://iggenix.com/wp-json/wp/v2/* and
+  https://iggenix.com/robots.txt, 2026-08-22. IgGenix publishes no API documentation, so there is no
+  docs page to read limits from.
+limit_count: 0
+published: false
+note: >-
+  No rate limits are published and none were signalled. Not a single response carried an X-RateLimit-*,
+  RateLimit-*, or Retry-After header, and no 429 was seen. This is an honest zero, not an unchecked one:
+  WordPress core has no rate limiter, and the WP Engine edge in front of this site applies its own
+  platform-level protection that it does not expose to callers. The only throughput signal IgGenix
+  publishes anywhere is a robots.txt Crawl-delay directive, which binds crawlers by convention and is
+  not an API limit.
+limits: []
+response_headers_observed:
+- name: X-RateLimit-Limit
+  present: false
+- name: X-RateLimit-Remaining
+  present: false
+- name: X-RateLimit-Reset
+  present: false
+- name: RateLimit-Limit
+  present: false
+- name: RateLimit-Policy
+  present: false
+- name: Retry-After
+  present: false
+exhaustion_status_code: null
+related_signals:
+- signal: robots.txt Crawl-delay
+  value: '10'
+  url: https://iggenix.com/robots.txt
+  status: 200
+  note: A crawler courtesy directive, not an API rate limit. Included because it is the only stated pacing expectation on this host.
+- signal: pagination cap
+  value: 'per_page maximum 100'
+  note: >-
+    Declared in the route index for every collection. Not a rate limit, but it is the one hard bound an
+    agent will actually hit — 76 media items and 20 press releases fit in a single page, so the whole
+    content surface can be read in a handful of calls.
+- signal: edge cache
+  value: 'cache-control: max-age=600, must-revalidate; x-cacheable: SHORT'
+  note: Repeated reads inside ten minutes are served from the WP Engine edge and do not reach the origin.
+- signal: wpe/cache-plugin/v1/rate_limit_status
+  value: 'POST /wp-json/wpe/cache-plugin/v1/rate_limit_status'
+  note: >-
+    A WP Engine host-plugin route named for rate limiting exists in the route index. It is a POST-only
+    administrative endpoint for the hosting platform's cache purge quota, not a consumer-facing limit,
+    and it was not called.

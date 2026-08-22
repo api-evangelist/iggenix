@@ -1,0 +1,37 @@
+generated: '2026-08-22'
+method: generated
+source: >-
+  Authored by the API Evangelist enrichment pipeline from openapi/_original/iggenix-content-openapi.yml
+  and conventions/iggenix-conventions.yml. IgGenix publishes no skills, no AGENTS.md and no llms.txt of
+  its own — https://iggenix.com/llms.txt returns 404 — so these are ours, not theirs, and every
+  operationId referenced was verified to exist in the specs in openapi/.
+note: >-
+  These skills cover the read surface only. They are useful for one job: reading IgGenix's public
+  scientific and corporate record — press releases, peer-reviewed publications and conference abstracts —
+  as structured data rather than by scraping a site whose HTML routing is currently broken.
+skills:
+- name: iggenix-read-the-record
+  file: iggenix-read-the-record.md
+  description: Search and read IgGenix press releases, publications and abstracts as structured JSON.
+  api: iggenix:iggenix-search-api
+  operations: [getSearch, getPressreleases, getPressreleasesId, getPublications, getPublicationsId, getAbstracts, getAbstractsId]
+- name: iggenix-read-pages-and-media
+  file: iggenix-read-pages-and-media.md
+  description: >-
+    Read iggenix.com pages and media through the API, which is the only reliable path while the site's
+    own HTML routing serves the wrong company's home page.
+  api: iggenix:iggenix-pages-api
+  operations: [getPages, getPagesId, getMedia, getMediaId, getTypes, getRouteIndex]
+excluded:
+- surface: /wp/v2/users
+  reason: >-
+    Returns real staff members' display names, author-archive URLs and Gravatar hashes to anonymous
+    callers. The route is documented structurally in openapi/ and data-model/, but no skill packages it
+    — a working people-lookup recipe is not a deliverable, and the omission is deliberate rather than an
+    oversight.
+- surface: every write operation (POST/PUT/PATCH/DELETE)
+  reason: >-
+    Authenticated-only, with no idempotency key and no dry-run. DELETE /wp/v2/media/{id} is irreversible
+    (force is required on that route). Nothing in this repository teaches an agent to mutate IgGenix's site.
+- surface: /wp/v2/settings and /wp-abilities/v1/*
+  reason: Return 401 rest_forbidden anonymously; there is nothing an unauthenticated agent can do with them.

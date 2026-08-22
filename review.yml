@@ -1,0 +1,83 @@
+generated: '2026-08-22'
+method: probed
+slug: iggenix
+name: IgGenix
+reviewed: '2026-08-22'
+summary: >-
+  IgGenix is a clinical-stage biotechnology company with no developer program, no product API and no
+  intention of having one. The enrichment pass found exactly one machine-readable contract on its
+  domain — the WordPress REST API its marketing site exposes at https://iggenix.com/wp-json/ — and
+  derived 97 operations from the route index the site publishes about itself. Two findings are worth a
+  provider's attention, one of them serious.
+findings:
+- id: html-front-end-serves-another-company
+  severity: high
+  title: iggenix.com serves a different company's home page
+  observed: '2026-08-22'
+  evidence:
+  - url: https://iggenix.com/
+    status: 200
+    detail: '76,626 bytes, md5 4b1974dc0d23b6367f1c28fbb953ce56, <title>Home | iECURE</title>, <link rel="canonical" href="https://iecure.com/">. Zero occurrences of the string "iggenix" in the body; 102 occurrences of "iecure". Footer reads "Copyright 2026 - iECURE".'
+  - url: https://iggenix.com/privacy-policy/
+    status: 200
+    detail: Byte-identical to the above. The real IgGenix privacy policy is intact and reachable at https://iggenix.com/wp-json/wp/v2/pages/3.
+  - url: https://iggenix.com/the-iggenix-team/
+    status: 200
+    detail: Byte-identical to the above. The 27 team and marketing pages are intact in the CMS and reachable through /wp-json/wp/v2/pages.
+  - url: https://iggenix.com/nonexistent-zzz/
+    status: 200
+    detail: Byte-identical — the same document is the catch-all for every unmatched path, which is why /.well-known/* probes return 302 into it.
+  - url: https://iggenix.com/publications/
+    status: 200
+    detail: 34,074 bytes, <title>Publications - IgGenix</title>, 27 occurrences of "iggenix", zero of "iecure". Unaffected.
+  - url: https://iggenix.com/wp-json/
+    status: 200
+    detail: 'Reports name: "IgGenix", url/home https://iggenix.com. Unaffected.'
+  description: >-
+    Only the three custom-post-type archives (/pressreleases/, /publications/, /abstracts/) render
+    IgGenix HTML. The site root, every WordPress page URL and every unmatched path return another
+    company's site. The content itself is not lost — it is all intact behind the REST API and in the
+    sitemap — so this reads as a front-page/permalink routing or theme-template misconfiguration on the
+    WP Engine install (origin iggenix.wpengine.com), not as data loss.
+  impact: >-
+    A visitor, a crawler or an agent arriving at iggenix.com is shown iECURE. Search engines are being
+    given a canonical pointing at iecure.com from IgGenix's own domain. The company's privacy policy is
+    unreachable at its published URL.
+  ownership_note: >-
+    This did NOT change attribution of the API. The contract in openapi/ is attributed to IgGenix on the
+    strength of what the surface says about itself — the route index reports name "IgGenix", the
+    collections return IGNX001 peanut-allergy content, and the servers/host are IgGenix's — not on the
+    strength of the fetch URL.
+  recommendation: >-
+    Restore the IgGenix front page and page permalinks on the WP Engine environment. Until then,
+    /pressreleases/ is the only safe URL to share.
+- id: users-endpoint-exposes-staff-pii
+  severity: medium
+  title: Anonymous /wp/v2/users returns staff names and Gravatar hashes
+  observed: '2026-08-22'
+  evidence:
+  - url: https://iggenix.com/wp-json/wp/v2/users?per_page=1
+    status: 200
+    detail: Returns display name, slug, author-archive link and three Gravatar URLs per account to an unauthenticated caller. No individual is reproduced in this repository.
+  description: >-
+    This is default WordPress behaviour rather than a deliberate publication, and the same names are
+    already discoverable from the /wp-sitemap-users-1.xml author sitemap the site publishes. It is
+    recorded because most site owners do not know the route is open.
+  handling: >-
+    API Evangelist documents the route structurally in openapi/ and data-model/ and excludes it from
+    every generated agent skill and MCP tool candidate. See skills/_index.yml excluded[] and
+    mcp/iggenix-mcp.yml excluded_tools[].
+  recommendation: Disable the users route, or restrict it to authenticated requests, if the exposure is unintended.
+- id: no-developer-surface
+  severity: informational
+  title: No developer program, and none expected
+  description: >-
+    No developer portal, documentation, OpenAPI, SDK, CLI, MCP server, agent card, status page, SLA,
+    deprecation policy, pricing or terms of service. api.iggenix.com, developer.iggenix.com and
+    docs.iggenix.com do not resolve; github.com/iggenix returns 404; every package registry misses.
+    For a Phase 1 antibody therapeutics company this is the expected posture, not a gap.
+domain_security_notes: >-
+  TLS 1.3 with a certificate valid to 2026-11-17, but HSTS is not set and the domain has no DNSSEC, no
+  CAA record, no SPF and no DMARC. For a company whose only public contact is email, the absent SPF and
+  DMARC records are the more consequential of these. See security/iggenix-domain-security.yml.
+artifacts_derived_from: https://iggenix.com/wp-json/

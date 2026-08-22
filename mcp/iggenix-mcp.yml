@@ -1,0 +1,93 @@
+generated: '2026-08-22'
+method: derived
+status: candidate
+source: >-
+  Searched for a published server (https://iggenix.com/wp-json/ namespace list, the site, npm, and the
+  /.well-known/mcp.json path) on 2026-08-22 — none exists. The tool list below is DERIVED from
+  openapi/_original/iggenix-content-openapi.yml as a candidate only.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: none
+  verified: searched
+  note: >-
+    Nobody ships an MCP server for IgGenix. The route index at https://iggenix.com/wp-json/ registers
+    seven namespaces (oembed/1.0, wpe/cache-plugin/v1, wpe_sign_on_plugin/v1, wp/v2, wp-site-health/v1,
+    wp-block-editor/v1, wp-abilities/v1) and there is no "mcp" namespace among them — unlike some other
+    WordPress sites in this catalog, the WordPress MCP Adapter is not installed here. No endpoint URL is
+    recorded, guessed, or implied, and no MCPServer pointer is emitted in apis.yml.
+search_performed:
+- target: WordPress MCP Adapter namespace
+  probe: 'GET https://iggenix.com/wp-json/ -> namespaces[]'
+  result: no "mcp" namespace registered
+- target: MCP discovery document
+  probe: 'GET https://iggenix.com/.well-known/mcp.json'
+  result: 302 into the site root (catch-all, not a document)
+- target: npm
+  probe: registry.npmjs.org/iggenix
+  result: 404
+- target: docs / developer host
+  probe: developer.iggenix.com, docs.iggenix.com, api.iggenix.com
+  result: none resolve
+companion_surface:
+  abilities_api: https://iggenix.com/wp-json/wp-abilities/v1/abilities
+  abilities_status: 401
+  abilities_body: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+  abilities_routes:
+  - /wp-abilities/v1/abilities
+  - /wp-abilities/v1/abilities/{name}
+  - /wp-abilities/v1/abilities/{name}/run
+  - /wp-abilities/v1/categories
+  note: >-
+    The WordPress Abilities API IS registered on this site and is what an MCP Adapter would project as
+    tools if one were installed. It is authentication-gated, so no ability could be enumerated
+    anonymously. This is the nearest thing to an agent surface IgGenix has, and it is not reachable.
+server: null
+tools_note: >-
+  The candidate tools below are read-only and cover the content surface a consumer would actually want.
+  Deliberately EXCLUDED: every operation on /wp/v2/users, because that route returns staff display names
+  and Gravatar hashes and packaging it as a tool would turn a default CMS configuration into a
+  people-lookup capability. Also excluded: all write operations (authenticated-only, non-idempotent, and
+  in the case of media deletion irreversible — see conventions/iggenix-conventions.yml) and every
+  administrative namespace.
+tools:
+- name: search_iggenix
+  description: Search every public post type on iggenix.com and return typed hits with id, title, URL and subtype.
+  source_operation: openapi/iggenix-search-api-openapi.yml#getSearch
+- name: list_press_releases
+  description: List IgGenix press releases, newest first, with dates and permalinks.
+  source_operation: openapi/iggenix-press-releases-api-openapi.yml#getPressreleases
+- name: get_press_release
+  description: Fetch one press release by id.
+  source_operation: openapi/iggenix-press-releases-api-openapi.yml#getPressreleasesId
+- name: list_publications
+  description: List IgGenix peer-reviewed publications.
+  source_operation: openapi/iggenix-publications-api-openapi.yml#getPublications
+- name: get_publication
+  description: Fetch one publication by id.
+  source_operation: openapi/iggenix-publications-api-openapi.yml#getPublicationsId
+- name: list_abstracts
+  description: List IgGenix conference abstracts and posters.
+  source_operation: openapi/iggenix-abstracts-api-openapi.yml#getAbstracts
+- name: get_abstract
+  description: Fetch one abstract by id.
+  source_operation: openapi/iggenix-abstracts-api-openapi.yml#getAbstractsId
+- name: list_media
+  description: List media library items, including the PDF posters linked from abstracts.
+  source_operation: openapi/iggenix-media-api-openapi.yml#getMedia
+- name: get_page
+  description: >-
+    Fetch a marketing page by id — including the privacy policy (id 3) and the team pages, which are
+    currently unreachable through the site's own HTML routing.
+  source_operation: openapi/iggenix-pages-api-openapi.yml#getPagesId
+excluded_tools:
+- surface: /wp/v2/users
+  reason: >-
+    Returns real people's display names, author-archive URLs and Gravatar hashes anonymously. Documented
+    structurally in the OpenAPI and data model; never packaged as a callable tool.
+- surface: all write operations
+  reason: Authenticated-only, no idempotency key, and media deletion is irreversible.
+- surface: wp-site-health/v1, wp-block-editor/v1, wpe/*, wp-abilities/v1
+  reason: Administrative and host-plugin machinery, not IgGenix content.

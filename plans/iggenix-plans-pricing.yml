@@ -1,0 +1,27 @@
+generated: '2026-08-22'
+method: searched
+source: >-
+  https://iggenix.com/ and its full page inventory read from https://iggenix.com/wp-json/wp/v2/pages,
+  plus the sitemap at https://iggenix.com/wp-sitemap.xml, 2026-08-22.
+plan_count: 0
+published: false
+note: >-
+  IgGenix publishes no plans, no pricing and no commercial API terms, because it sells no API. It is a
+  clinical-stage biotechnology company whose product pipeline is investigational antibody therapeutics
+  (IGNX001 for peanut allergy, Phase 1), not software. The surface profiled in this repository is the
+  WordPress REST API its marketing site exposes, which is free, anonymous and unmetered by omission
+  rather than by policy — there is no signup, no key issuance, no quota and no billing relationship of
+  any kind. This is an honest zero recorded deliberately, not a missing artifact.
+plans: []
+signup:
+  url: null
+  published: false
+  note: No developer signup, no account creation, no API key. The content read surface needs no credential.
+free_tier:
+  exists: true
+  terms: unstated
+  note: >-
+    Anonymous read access is available to anyone, but IgGenix states no terms governing it — the site
+    publishes no terms of service (probed: https://iggenix.com/terms/ returns the site catch-all), so a
+    consumer has no written permission or restriction to rely on.
+enterprise_contact: mailto:info@IgGenix.com

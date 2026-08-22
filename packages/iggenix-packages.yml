@@ -1,0 +1,66 @@
+generated: '2026-08-22'
+method: searched
+source: >-
+  Public package-registry lookups plus the iggenix.com site and GitHub search, 2026-08-22.
+note: >-
+  IgGenix ships no client library, SDK or CLI of any kind, in any language. It publishes no
+  product API to wrap — the only API on iggenix.com is the WordPress REST API its CMS exposes,
+  and there is no first-party client for it. There is also no GitHub organization: both
+  github.com/iggenix (HTTP 404 from the API) and a repository search for "iggenix" (0 results)
+  come back empty, so unlike some research-stage biotechs the company publishes no open research
+  code either. Every registry below was queried unauthenticated on 2026-08-22 and returned a
+  miss; version and published are therefore null for the whole artifact rather than omitted,
+  because "checked, nothing found" and "not checked" are different facts. No SDKs pointer is
+  emitted in apis.yml — there is no SDK to point at.
+sdk_count: 0
+api_clients: 0
+packages: []
+registries_probed:
+- registry: npm
+  query: iggenix
+  endpoint: https://registry.npmjs.org/iggenix
+  result: 404
+  version: null
+  published: null
+- registry: pypi
+  query: iggenix
+  endpoint: https://pypi.org/pypi/iggenix/json
+  result: 404
+  version: null
+  published: null
+- registry: rubygems
+  query: iggenix
+  result: no gem
+  version: null
+  published: null
+- registry: crates.io
+  query: iggenix
+  result: no crate
+  version: null
+  published: null
+- registry: nuget
+  query: iggenix
+  result: 0 hits
+  version: null
+  published: null
+- registry: maven-central
+  query: iggenix
+  result: no artifact
+  version: null
+  published: null
+- registry: packagist
+  query: iggenix
+  result: no package
+  version: null
+  published: null
+- registry: pkg.go.dev
+  query: iggenix
+  result: no module
+  version: null
+  published: null
+- registry: github
+  query: org iggenix / repo search iggenix
+  endpoint: https://api.github.com/orgs/iggenix
+  result: 404 (org does not exist); repository search total_count 0
+  version: null
+  published: null

@@ -1,0 +1,761 @@
+openapi: 3.2.0
+info:
+  title: IgGenix Content API (WordPress REST wp/v2) Careers API
+  version: wp/v2
+  summary: 'Public read surface of iggenix.com content: press releases, peer-reviewed publications, conference abstracts,
+    careers postings, pages, media, taxonomies and site search.'
+  description: 'IgGenix publishes iggenix.com on WordPress (hosted on WP Engine as iggenix.wpengine.com), which
+    exposes the WordPress REST API at https://iggenix.com/wp-json/. The wp/v2 namespace is anonymously readable
+    and returns the company''s press releases, peer-reviewed publications, conference abstracts, a careers post
+    type, pages, media library, taxonomies and a site-wide search endpoint as JSON.
+
+
+    This document was DERIVED mechanically by API Evangelist from the route-discovery document served at https://iggenix.com/wp-json/
+    on 2026-08-22 — every path, method, parameter, type, enum and default below is taken verbatim from that descriptor,
+    and each collection was confirmed with an anonymous GET. IgGenix does not publish an OpenAPI definition of its
+    own, and this is not a product API: it is the content API the CMS exposes. Write operations exist on these routes
+    but require authentication (WordPress Application Passwords over HTTP Basic); GET /wp/v2/settings and the wp-abilities/v1
+    registry return 401 rest_forbidden anonymously.
+
+
+    NOTE ON THE SITE ITSELF: on the date of derivation the HTML front end at iggenix.com served another company''s
+    home page (iECURE, canonical https://iecure.com/) for the site root and for every unmatched path, including
+    /privacy-policy/ and /the-iggenix-team/. The REST API and the custom-post-type archives (/publications/, /abstracts/,
+    /pressreleases/) are unambiguously IgGenix''s — the route index reports name "IgGenix" and returns IGNX001 peanut-allergy
+    content — so this contract is attributed to IgGenix. The HTML routing defect is recorded in review.yml.'
+  contact:
+    name: IgGenix
+    url: https://iggenix.com/
+    email: info@IgGenix.com
+  x-derived-by: API Evangelist enrichment pipeline
+  x-derived-from: https://iggenix.com/wp-json/
+  x-derived-on: '2026-08-22'
+  x-provider-published: false
+servers:
+- url: https://iggenix.com/wp-json
+  description: Production
+tags:
+- name: Careers
+paths:
+  /wp/v2/careers:
+    get:
+      operationId: getCareers
+      summary: GET /wp/v2/careers
+      tags:
+      - Careers
+      parameters:
+      - name: after
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts published after a given ISO8601 compliant date.
+      - name: before
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts published before a given ISO8601 compliant date.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: modified_after
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts modified after a given ISO8601 compliant date.
+      - name: modified_before
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts modified before a given ISO8601 compliant date.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          default: date
+        description: Sort collection by post attribute.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Current page of the collection.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to be returned in result set.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: search_columns
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: string
+            enum:
+            - post_title
+            - post_content
+            - post_excerpt
+        description: Array of column names to be searched.
+      - name: search_semantics
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - exact
+        description: How to interpret the search input.
+      - name: slug
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to posts with one or more specific slugs.
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: array
+          default: publish
+          items:
+            type: string
+            enum:
+            - publish
+            - future
+            - draft
+            - pending
+            - private
+            - trash
+            - auto-draft
+            - inherit
+            - request-pending
+            - request-confirmed
+            - request-failed
+            - request-completed
+            - acf-disabled
+            - any
+        description: Limit result set to posts assigned one or more statuses.
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': &id001
+          $ref: '#/components/responses/BadRequest'
+        '404': &id002
+          $ref: '#/components/responses/NotFound'
+      security:
+      - {}
+      - applicationPassword: []
+    post:
+      operationId: postCareers
+      summary: POST /wp/v2/careers
+      tags:
+      - Careers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: object
+                  additionalProperties: true
+                  description: The content for the post.
+                date:
+                  type: string
+                  format: date-time
+                  description: The date the post was published, in the site's timezone.
+                date_gmt:
+                  type: string
+                  format: date-time
+                  description: The date the post was published, as GMT.
+                password:
+                  type: string
+                  description: A password to protect access to the content and excerpt.
+                slug:
+                  type: string
+                  description: An alphanumeric identifier for the post unique to its type.
+                status:
+                  type: string
+                  enum:
+                  - publish
+                  - future
+                  - draft
+                  - pending
+                  - private
+                  - acf-disabled
+                  description: A named status for the post.
+                template:
+                  type: string
+                  description: The theme file to use to display the post.
+                title:
+                  type: object
+                  additionalProperties: true
+                  description: The title for the post.
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': *id001
+        '401': &id003
+          $ref: '#/components/responses/Unauthorized'
+        '403': &id004
+          $ref: '#/components/responses/Forbidden'
+        '404': *id002
+      security:
+      - applicationPassword: []
+  /wp/v2/careers/{id}:
+    get:
+      operationId: getCareersId
+      summary: GET /wp/v2/careers/{id}
+      tags:
+      - Careers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        x-wp-pattern: '[\d]+'
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Unique identifier for the post.
+      - name: password
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The password for the post if it is password protected.
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': *id001
+        '404': *id002
+      security:
+      - {}
+      - applicationPassword: []
+    post:
+      operationId: postCareersId
+      summary: POST /wp/v2/careers/{id}
+      tags:
+      - Careers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        x-wp-pattern: '[\d]+'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: object
+                  additionalProperties: true
+                  description: The content for the post.
+                date:
+                  type: string
+                  format: date-time
+                  description: The date the post was published, in the site's timezone.
+                date_gmt:
+                  type: string
+                  format: date-time
+                  description: The date the post was published, as GMT.
+                id:
+                  type: integer
+                  description: Unique identifier for the post.
+                password:
+                  type: string
+                  description: A password to protect access to the content and excerpt.
+                slug:
+                  type: string
+                  description: An alphanumeric identifier for the post unique to its type.
+                status:
+                  type: string
+                  enum: &id005
+                  - publish
+                  - future
+                  - draft
+                  - pending
+                  - private
+                  - acf-disabled
+                  description: A named status for the post.
+                template:
+                  type: string
+                  description: The theme file to use to display the post.
+                title:
+                  type: object
+                  additionalProperties: true
+                  description: The title for the post.
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': *id001
+        '401': *id003
+        '403': *id004
+        '404': *id002
+      security:
+      - applicationPassword: []
+    put:
+      operationId: putCareersId
+      summary: PUT /wp/v2/careers/{id}
+      tags:
+      - Careers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        x-wp-pattern: '[\d]+'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: object
+                  additionalProperties: true
+                  description: The content for the post.
+                date:
+                  type: string
+                  format: date-time
+                  description: The date the post was published, in the site's timezone.
+                date_gmt:
+                  type: string
+                  format: date-time
+                  description: The date the post was published, as GMT.
+                id:
+                  type: integer
+                  description: Unique identifier for the post.
+                password:
+                  type: string
+                  description: A password to protect access to the content and excerpt.
+                slug:
+                  type: string
+                  description: An alphanumeric identifier for the post unique to its type.
+                status:
+                  type: string
+                  enum: *id005
+                  description: A named status for the post.
+                template:
+                  type: string
+                  description: The theme file to use to display the post.
+                title:
+                  type: object
+                  additionalProperties: true
+                  description: The title for the post.
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': *id001
+        '401': *id003
+        '403': *id004
+        '404': *id002
+      security:
+      - applicationPassword: []
+    patch:
+      operationId: patchCareersId
+      summary: PATCH /wp/v2/careers/{id}
+      tags:
+      - Careers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        x-wp-pattern: '[\d]+'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: object
+                  additionalProperties: true
+                  description: The content for the post.
+                date:
+                  type: string
+                  format: date-time
+                  description: The date the post was published, in the site's timezone.
+                date_gmt:
+                  type: string
+                  format: date-time
+                  description: The date the post was published, as GMT.
+                id:
+                  type: integer
+                  description: Unique identifier for the post.
+                password:
+                  type: string
+                  description: A password to protect access to the content and excerpt.
+                slug:
+                  type: string
+                  description: An alphanumeric identifier for the post unique to its type.
+                status:
+                  type: string
+                  enum: *id005
+                  description: A named status for the post.
+                template:
+                  type: string
+                  description: The theme file to use to display the post.
+                title:
+                  type: object
+                  additionalProperties: true
+                  description: The title for the post.
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': *id001
+        '401': *id003
+        '403': *id004
+        '404': *id002
+      security:
+      - applicationPassword: []
+    delete:
+      operationId: deleteCareersId
+      summary: DELETE /wp/v2/careers/{id}
+      tags:
+      - Careers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        x-wp-pattern: '[\d]+'
+      - name: force
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Whether to bypass Trash and force deletion.
+      - name: id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Unique identifier for the post.
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': *id001
+        '401': *id003
+        '403': *id004
+        '404': *id002
+      security:
+      - applicationPassword: []
+components:
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: WordPress Application Passwords over HTTP Basic. Advertised by the site's own route index at
+        https://iggenix.com/wp-json/ under authentication.application-passwords, with the authorization endpoint
+        at https://iggenix.com/wp-admin/authorize-application.php. Required only for write operations and for the
+        authenticated-read routes (/wp/v2/settings, /wp-abilities/v1/*); the content read surface is anonymous.
+  responses:
+    BadRequest:
+      description: Invalid parameter (rest_invalid_param).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WpError'
+    Unauthorized:
+      description: Authentication required or rejected (rest_forbidden / rest_not_logged_in). Observed verbatim
+        on GET /wp/v2/settings and GET /wp-abilities/v1/abilities.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WpError'
+    Forbidden:
+      description: Authenticated but not permitted (rest_cannot_view / rest_forbidden).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WpError'
+    NotFound:
+      description: No route or resource matched (rest_no_route / rest_post_invalid_id).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WpError'
+  schemas:
+    WpError:
+      type: object
+      description: The WordPress REST API error envelope (WP_Error serialized to JSON). Observed verbatim from this
+        host.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error slug, e.g. rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: object
+              additionalProperties: true
+            details:
+              type: object
+              additionalProperties: true
+          additionalProperties: true
+      required:
+      - code
+      - message
+      - data
+      example:
+        code: rest_post_invalid_id
+        message: Invalid post ID.
+        data:
+          status: 404
+    RenderedText:
+      type: object
+      description: WordPress renders text fields as an object with a rendered HTML string.
+      properties:
+        rendered:
+          type: string
+          description: HTML-rendered value.
+        raw:
+          type: string
+          description: Unrendered source; present only for authenticated context=edit.
+    Links:
+      type: object
+      description: HAL-style _links hypermedia block returned on every resource.
+      additionalProperties: true

@@ -1,0 +1,76 @@
+generated: '2026-08-22'
+method: probed
+source: 'https://iggenix.com/wp-json/wp/v2/pressreleases?per_page=100&orderby=date&order=desc — read 2026-08-22'
+kind: corporate
+api_changelog_published: false
+note: >-
+  IgGenix publishes NO API changelog — there is no API to version and no release notes of any kind. What
+  follows is the company's own dated public record, read from the press-release collection on its REST
+  API, captured because it is the only structured dated series IgGenix maintains. It is deliberately NOT
+  wired as a ChangeLog pointer in apis.yml: the ChangeLog check asks whether a provider documents changes
+  to its API, and answering it with corporate news would be a false positive.
+scheme: none
+current_version: null
+entry_count: 20
+window: 2020-08-04 to 2025-09-02
+entries:
+- date: '2025-09-02'
+  id: 525
+  title: Completion of enrollment for the Phase 1 clinical trial "ACCELERATE Peanut" with IGNX001 in peanut allergy
+- date: '2025-02-10'
+  id: 518
+  title: Alpha-gal syndrome monoclonal antibody discovery presented at the 2025 AAAAI / WAO Joint Congress
+- date: '2024-10-16'
+  id: 470
+  title: First patient dosed in the Phase 1 "ACCELERATE Peanut" trial evaluating IGNX001
+- date: '2024-09-02'
+  id: 462
+  title: Data supporting clinical development of IGNX001 presented at the 2024 ASCIA Annual Conference
+- date: '2024-06-03'
+  id: 414
+  title: IGNX001 potential as a targeted peanut-allergy therapeutic shown at the 2024 EAACI Annual Meeting
+- date: '2024-02-22'
+  id: 402
+  title: SEQ SIFTER antibody discovery platform research presented at the 2024 AAAAI Annual Meeting
+- date: '2023-11-14'
+  id: 392
+  title: New data published supporting allergen-specific therapeutics for peanut allergy
+- date: '2023-06-09'
+  id: 360
+  title: Potential demonstrated for an IgG4 monoclonal antibody approach to treating peanut allergy
+- date: '2023-04-04'
+  id: 358
+  title: USPTO patent granted covering the generation of allergen-specific antibodies
+- date: '2023-03-01'
+  id: 349
+  title: Single-cell RNA sequencing applied to shellfish allergies at the 2023 AAAAI Annual Meeting
+- date: '2023-02-06'
+  id: 345
+  title: First close of a $40M Series B financing to accelerate the lead peanut-allergy antibody program
+- date: '2022-08-19'
+  id: 287
+  title: 'Interview: how re-engineering antibodies can prevent allergies (Labiotech.eu)'
+- date: '2022-07-01'
+  id: 285
+  title: Single-cell RNA sequencing potential demonstrated in tree-nut allergies
+- date: '2022-04-26'
+  id: 272
+  title: Headquarters moved to Lilly Gateway Labs in South San Francisco
+- date: '2022-02-23'
+  id: 267
+  title: Food-allergy research presented at the AAAAI Annual Meeting
+- date: '2021-07-27'
+  id: 252
+  title: $25M Series A1 financing announced
+- date: '2021-06-24'
+  id: 247
+  title: Jessica Grossman, M.D. appointed Chief Executive Officer
+- date: '2020-11-06'
+  id: 236
+  title: 'Emerging company profile: antibody engineering for food allergies (BioCentury)'
+- date: '2020-09-29'
+  id: 226
+  title: Co-founder Kari Nadeau's landmark food-allergy book published
+- date: '2020-08-04'
+  id: 225
+  title: $10M Series A financing completed

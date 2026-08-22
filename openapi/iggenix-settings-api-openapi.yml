@@ -1,0 +1,476 @@
+openapi: 3.2.0
+info:
+  title: IgGenix Content API (WordPress REST wp/v2) Settings API
+  version: wp/v2
+  summary: 'Public read surface of iggenix.com content: press releases, peer-reviewed publications, conference abstracts,
+    careers postings, pages, media, taxonomies and site search.'
+  description: 'IgGenix publishes iggenix.com on WordPress (hosted on WP Engine as iggenix.wpengine.com), which
+    exposes the WordPress REST API at https://iggenix.com/wp-json/. The wp/v2 namespace is anonymously readable
+    and returns the company''s press releases, peer-reviewed publications, conference abstracts, a careers post
+    type, pages, media library, taxonomies and a site-wide search endpoint as JSON.
+
+
+    This document was DERIVED mechanically by API Evangelist from the route-discovery document served at https://iggenix.com/wp-json/
+    on 2026-08-22 — every path, method, parameter, type, enum and default below is taken verbatim from that descriptor,
+    and each collection was confirmed with an anonymous GET. IgGenix does not publish an OpenAPI definition of its
+    own, and this is not a product API: it is the content API the CMS exposes. Write operations exist on these routes
+    but require authentication (WordPress Application Passwords over HTTP Basic); GET /wp/v2/settings and the wp-abilities/v1
+    registry return 401 rest_forbidden anonymously.
+
+
+    NOTE ON THE SITE ITSELF: on the date of derivation the HTML front end at iggenix.com served another company''s
+    home page (iECURE, canonical https://iecure.com/) for the site root and for every unmatched path, including
+    /privacy-policy/ and /the-iggenix-team/. The REST API and the custom-post-type archives (/publications/, /abstracts/,
+    /pressreleases/) are unambiguously IgGenix''s — the route index reports name "IgGenix" and returns IGNX001 peanut-allergy
+    content — so this contract is attributed to IgGenix. The HTML routing defect is recorded in review.yml.'
+  contact:
+    name: IgGenix
+    url: https://iggenix.com/
+    email: info@IgGenix.com
+  x-derived-by: API Evangelist enrichment pipeline
+  x-derived-from: https://iggenix.com/wp-json/
+  x-derived-on: '2026-08-22'
+  x-provider-published: false
+servers:
+- url: https://iggenix.com/wp-json
+  description: Production
+tags:
+- name: Settings
+paths:
+  /wp/v2/settings:
+    get:
+      operationId: getSettings
+      summary: GET /wp/v2/settings
+      tags:
+      - Settings
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': &id001
+          $ref: '#/components/responses/BadRequest'
+        '401': &id002
+          $ref: '#/components/responses/Unauthorized'
+        '403': &id003
+          $ref: '#/components/responses/Forbidden'
+        '404': &id004
+          $ref: '#/components/responses/NotFound'
+      security:
+      - applicationPassword: []
+    post:
+      operationId: postSettings
+      summary: POST /wp/v2/settings
+      tags:
+      - Settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date_format:
+                  type: string
+                  description: A date format for all date strings.
+                default_category:
+                  type: integer
+                  description: Default post category.
+                default_comment_status:
+                  type: string
+                  enum: &id005
+                  - open
+                  - closed
+                  description: Allow people to submit comments on new posts.
+                default_ping_status:
+                  type: string
+                  enum: &id006
+                  - open
+                  - closed
+                  description: Allow link notifications from other blogs (pingbacks and trackbacks) on new articles.
+                default_post_format:
+                  type: string
+                  description: Default post format.
+                description:
+                  type: string
+                  description: Site tagline.
+                email:
+                  type: string
+                  format: email
+                  description: This address is used for admin purposes, like new user notification.
+                language:
+                  type: string
+                  description: WordPress locale code.
+                page_for_posts:
+                  type: integer
+                  description: The ID of the page that should display the latest posts
+                page_on_front:
+                  type: integer
+                  description: The ID of the page that should be displayed on the front page
+                posts_per_page:
+                  type: integer
+                  description: Blog pages show at most.
+                show_on_front:
+                  type: string
+                  description: What to show on the front page
+                site_icon:
+                  type: integer
+                  description: Site icon.
+                site_logo:
+                  type: integer
+                  description: Site logo.
+                start_of_week:
+                  type: integer
+                  description: A day number of the week that the week should start on.
+                time_format:
+                  type: string
+                  description: A time format for all time strings.
+                timezone:
+                  type: string
+                  description: A city in the same timezone as you.
+                title:
+                  type: string
+                  description: Site title.
+                url:
+                  type: string
+                  format: uri
+                  description: Site URL.
+                use_smilies:
+                  type: boolean
+                  description: Convert emoticons like :-) and :-P to graphics on display.
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': *id001
+        '401': *id002
+        '403': *id003
+        '404': *id004
+      security:
+      - applicationPassword: []
+    put:
+      operationId: putSettings
+      summary: PUT /wp/v2/settings
+      tags:
+      - Settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date_format:
+                  type: string
+                  description: A date format for all date strings.
+                default_category:
+                  type: integer
+                  description: Default post category.
+                default_comment_status:
+                  type: string
+                  enum: *id005
+                  description: Allow people to submit comments on new posts.
+                default_ping_status:
+                  type: string
+                  enum: *id006
+                  description: Allow link notifications from other blogs (pingbacks and trackbacks) on new articles.
+                default_post_format:
+                  type: string
+                  description: Default post format.
+                description:
+                  type: string
+                  description: Site tagline.
+                email:
+                  type: string
+                  format: email
+                  description: This address is used for admin purposes, like new user notification.
+                language:
+                  type: string
+                  description: WordPress locale code.
+                page_for_posts:
+                  type: integer
+                  description: The ID of the page that should display the latest posts
+                page_on_front:
+                  type: integer
+                  description: The ID of the page that should be displayed on the front page
+                posts_per_page:
+                  type: integer
+                  description: Blog pages show at most.
+                show_on_front:
+                  type: string
+                  description: What to show on the front page
+                site_icon:
+                  type: integer
+                  description: Site icon.
+                site_logo:
+                  type: integer
+                  description: Site logo.
+                start_of_week:
+                  type: integer
+                  description: A day number of the week that the week should start on.
+                time_format:
+                  type: string
+                  description: A time format for all time strings.
+                timezone:
+                  type: string
+                  description: A city in the same timezone as you.
+                title:
+                  type: string
+                  description: Site title.
+                url:
+                  type: string
+                  format: uri
+                  description: Site URL.
+                use_smilies:
+                  type: boolean
+                  description: Convert emoticons like :-) and :-P to graphics on display.
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': *id001
+        '401': *id002
+        '403': *id003
+        '404': *id004
+      security:
+      - applicationPassword: []
+    patch:
+      operationId: patchSettings
+      summary: PATCH /wp/v2/settings
+      tags:
+      - Settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date_format:
+                  type: string
+                  description: A date format for all date strings.
+                default_category:
+                  type: integer
+                  description: Default post category.
+                default_comment_status:
+                  type: string
+                  enum: *id005
+                  description: Allow people to submit comments on new posts.
+                default_ping_status:
+                  type: string
+                  enum: *id006
+                  description: Allow link notifications from other blogs (pingbacks and trackbacks) on new articles.
+                default_post_format:
+                  type: string
+                  description: Default post format.
+                description:
+                  type: string
+                  description: Site tagline.
+                email:
+                  type: string
+                  format: email
+                  description: This address is used for admin purposes, like new user notification.
+                language:
+                  type: string
+                  description: WordPress locale code.
+                page_for_posts:
+                  type: integer
+                  description: The ID of the page that should display the latest posts
+                page_on_front:
+                  type: integer
+                  description: The ID of the page that should be displayed on the front page
+                posts_per_page:
+                  type: integer
+                  description: Blog pages show at most.
+                show_on_front:
+                  type: string
+                  description: What to show on the front page
+                site_icon:
+                  type: integer
+                  description: Site icon.
+                site_logo:
+                  type: integer
+                  description: Site logo.
+                start_of_week:
+                  type: integer
+                  description: A day number of the week that the week should start on.
+                time_format:
+                  type: string
+                  description: A time format for all time strings.
+                timezone:
+                  type: string
+                  description: A city in the same timezone as you.
+                title:
+                  type: string
+                  description: Site title.
+                url:
+                  type: string
+                  format: uri
+                  description: Site URL.
+                use_smilies:
+                  type: boolean
+                  description: Convert emoticons like :-) and :-P to graphics on display.
+      responses:
+        '200':
+          description: Success. Collection responses also carry X-WP-Total and X-WP-TotalPages headers and an RFC
+            8288 Link header for pagination.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 next/prev pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400': *id001
+        '401': *id002
+        '403': *id003
+        '404': *id004
+      security:
+      - applicationPassword: []
+components:
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: WordPress Application Passwords over HTTP Basic. Advertised by the site's own route index at
+        https://iggenix.com/wp-json/ under authentication.application-passwords, with the authorization endpoint
+        at https://iggenix.com/wp-admin/authorize-application.php. Required only for write operations and for the
+        authenticated-read routes (/wp/v2/settings, /wp-abilities/v1/*); the content read surface is anonymous.
+  responses:
+    BadRequest:
+      description: Invalid parameter (rest_invalid_param).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WpError'
+    Unauthorized:
+      description: Authentication required or rejected (rest_forbidden / rest_not_logged_in). Observed verbatim
+        on GET /wp/v2/settings and GET /wp-abilities/v1/abilities.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WpError'
+    Forbidden:
+      description: Authenticated but not permitted (rest_cannot_view / rest_forbidden).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WpError'
+    NotFound:
+      description: No route or resource matched (rest_no_route / rest_post_invalid_id).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WpError'
+  schemas:
+    WpError:
+      type: object
+      description: The WordPress REST API error envelope (WP_Error serialized to JSON). Observed verbatim from this
+        host.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error slug, e.g. rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: object
+              additionalProperties: true
+            details:
+              type: object
+              additionalProperties: true
+          additionalProperties: true
+      required:
+      - code
+      - message
+      - data
+      example:
+        code: rest_post_invalid_id
+        message: Invalid post ID.
+        data:
+          status: 404
+    RenderedText:
+      type: object
+      description: WordPress renders text fields as an object with a rendered HTML string.
+      properties:
+        rendered:
+          type: string
+          description: HTML-rendered value.
+        raw:
+          type: string
+          description: Unrendered source; present only for authenticated context=edit.
+    Links:
+      type: object
+      description: HAL-style _links hypermedia block returned on every resource.
+      additionalProperties: true

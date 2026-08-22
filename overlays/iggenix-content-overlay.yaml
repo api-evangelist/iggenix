@@ -1,0 +1,60 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the IgGenix Content API
+  version: 1.0.0
+extends: openapi/_original/iggenix-content-openapi.yml
+x-generated: '2026-08-22'
+x-method: generated
+x-source: >-
+  Authored by the API Evangelist enrichment pipeline. Captures the annotations we add on top of the
+  contract derived from https://iggenix.com/wp-json/, so the derived spec stays a faithful projection of
+  the route index and our judgements live here instead of being mixed into it.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profiled: '2026-08-22'
+    x-apievangelist-repo: https://github.com/api-evangelist/iggenix
+    x-provider-publishes-spec: false
+    x-surface-class: cms-content-api
+    x-surface-note: >-
+      A WordPress REST API exposed by a marketing site, not a product API. IgGenix runs no developer
+      program. Treat every route as subject to change without notice.
+- target: $.info
+  update:
+    x-site-integrity-warning: >-
+      Verified 2026-08-22 — the HTML front end at iggenix.com returns another company's home page
+      (iECURE, canonical https://iecure.com/) for the site root and every unmatched path. This API is
+      unaffected and is the reliable source of IgGenix content. Attribution of this contract to IgGenix
+      rests on the route index reporting name "IgGenix" and the collections returning IGNX001
+      peanut-allergy content.
+- target: $.servers[0]
+  update:
+    x-origin: WP Engine (iggenix.wpengine.com)
+    x-edge-cache: 'cache-control: max-age=600, must-revalidate'
+- target: $.paths['/wp/v2/search'].get
+  update:
+    x-apievangelist-recommended-entry-point: true
+    x-note: >-
+      The only operation that spans every post type and returns the subtype needed to dereference a hit.
+      Start here rather than guessing which collection an item lives in.
+- target: $.paths['/wp/v2/users'].get
+  update:
+    x-personal-data: true
+    x-apievangelist-excluded-from-tooling: true
+    x-note: >-
+      Returns staff display names, author-archive URLs and Gravatar hashes to anonymous callers. API
+      Evangelist documents this route structurally but deliberately excludes it from the generated agent
+      skills and MCP tool candidates, and names no individual anywhere in this repository.
+- target: $.paths['/wp/v2/media/{id}'].delete
+  update:
+    x-irreversible: true
+    x-note: >-
+      The route index declares force as required on this endpoint, so an attachment delete bypasses the
+      trash and cannot be undone. The one write on this surface with no reversal path.
+- target: $.paths['/wp/v2/settings'].get
+  update:
+    x-observed-status: 401
+    x-note: 'Anonymous GET returns {"code":"rest_forbidden",...}. No WWW-Authenticate header is returned, so the scheme is discoverable only from the route index.'
+- target: $.components.securitySchemes.applicationPassword
+  update:
+    x-scope: writes and the authenticated-read routes only; the entire content read surface is anonymous

@@ -1,0 +1,87 @@
+generated: '2026-08-22'
+method: probed
+source: live GET probes of the /.well-known/ surface on every iggenix.com host, 2026-08-22
+host: https://iggenix.com
+hit_count: 0
+note: >-
+  IgGenix serves NO /.well-known/ discovery document. Two paths return a genuine WordPress 404
+  (security.txt, dnt-policy.txt); every other path returns HTTP 302 into the site root, which is
+  a catch-all — the control probe /.well-known/aeprobe-control-9f3a, a path that cannot exist,
+  returns exactly the same 302. Nothing was fetched and nothing was saved, so no WellKnown and
+  no SecurityTxt pointer is emitted in apis.yml. Recorded as observed: an absence is valid data,
+  and nothing was authored on IgGenix's behalf. There is no separate API host — api.iggenix.com,
+  developer.iggenix.com and docs.iggenix.com do not resolve, so iggenix.com (WP Engine origin
+  iggenix.wpengine.com) is the only host with a discovery surface to probe.
+soft_404_control:
+  path: /.well-known/aeprobe-control-9f3a
+  status: 302
+  redirects_to: https://iggenix.com/
+  body_bytes: 0
+  note: >-
+    Follows to the site root, which returns 76,626 bytes of HTML byte-identical to the home page
+    (md5 4b1974dc0d23b6367f1c28fbb953ce56). Every unmatched path on this host resolves the same
+    way, so a 302 or a followed 200 on any /.well-known/ path is the catch-all, not a document.
+hosts_probed:
+- host: iggenix.com
+  resolves: true
+  note: A record 35.229.108.45; CNAME iggenix.wpengine.com
+- host: www.iggenix.com
+  resolves: true
+  note: Redirects to the apex
+- host: api.iggenix.com
+  resolves: false
+  note: Connection failed — no API host
+- host: developer.iggenix.com
+  resolves: false
+  note: Connection failed — no developer host
+- host: docs.iggenix.com
+  resolves: false
+  note: Connection failed — no docs host
+hosts:
+- host: https://iggenix.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/dnt-policy.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 302
+  - path: /.well-known/oauth-authorization-server
+    status: 302
+  - path: /.well-known/oauth-protected-resource
+    status: 302
+  - path: /.well-known/api-catalog
+    status: 302
+  - path: /.well-known/ai-plugin.json
+    status: 302
+  - path: /.well-known/mcp.json
+    status: 302
+  - path: /.well-known/agent-card.json
+    status: 302
+  - path: /.well-known/agent.json
+    status: 302
+adjacent_discovery_found:
+- path: /wp-json/
+  status: 200
+  content_type: application/json
+  note: >-
+    The WordPress REST route-discovery document — 148 routes across 7 namespaces. This is the only
+    real machine-readable contract on iggenix.com and is the source every OpenAPI in openapi/ was
+    derived from. Saved verbatim at openapi/_source/iggenix-wp-json-root.json.
+- path: /robots.txt
+  status: 200
+  note: 'Disallows only /wp-admin/ (allowing admin-ajax.php) and sets Crawl-delay: 10. No AI-crawler
+    rules of any kind — neither allow nor deny. Declares the sitemap.'
+- path: /wp-sitemap.xml
+  status: 200
+  note: WordPress core sitemap index — pages, publications, abstracts, pressreleases, users.
+- path: /feed/
+  status: 200
+  content_type: application/rss+xml
+  note: WordPress core RSS 2.0 feed, channel title "IgGenix".
+- path: /llms.txt
+  status: 404
+  note: Not published. A generated one is at llms/iggenix-llms.txt and is marked as ours, not theirs.
+- path: /xmlrpc.php
+  status: 403
+  note: Legacy XML-RPC endpoint present but blocked at the edge by WP Engine.

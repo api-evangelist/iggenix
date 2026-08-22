@@ -1,0 +1,97 @@
+generated: '2026-08-22'
+method: derived
+source: >-
+  openapi/_original/iggenix-content-openapi.yml (derived from https://iggenix.com/wp-json/) plus error
+  responses observed live from https://iggenix.com/wp-json/wp/v2/*, 2026-08-22.
+format: wordpress-wp-error
+rfc9457: false
+envelope:
+  content_type: application/json
+  shape: '{ "code": "<slug>", "message": "<human text>", "data": { "status": <http status> } }'
+  fields:
+  - name: code
+    description: Stable machine-readable error slug. This is the field an agent should branch on.
+  - name: message
+    description: Human-readable, localized message. Not stable; do not match on it.
+  - name: data.status
+    description: The HTTP status code, repeated inside the body.
+  - name: data.params
+    description: Present on validation failures; maps the offending parameter names to their messages.
+  note: >-
+    IgGenix publishes no error reference — this catalog is derived from the contract and from responses
+    observed on the live host. Entries marked observed:true were reproduced by an anonymous request on
+    2026-08-22; the rest are WordPress core error slugs the declared operations can return.
+problems:
+- status: 404
+  code: rest_post_invalid_id
+  title: Invalid post ID
+  observed: true
+  observed_on: 'GET https://iggenix.com/wp-json/wp/v2/posts/99999999'
+  observed_body: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+  remediation: >-
+    The id does not exist, or exists under a different post type. Resolve the id from the collection or
+    from GET /wp/v2/search, which returns the correct subtype and a self href for each hit.
+  source_operation: openapi/iggenix-posts-api-openapi.yml#getPostsId
+- status: 401
+  code: rest_forbidden
+  title: Not allowed
+  observed: true
+  observed_on: 'GET https://iggenix.com/wp-json/wp/v2/settings and GET https://iggenix.com/wp-json/wp-abilities/v1/abilities'
+  observed_body: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+  remediation: >-
+    Authenticate with a WordPress Application Password over HTTP Basic. Note the status is 401 with no
+    WWW-Authenticate challenge header, so a client cannot discover the scheme from the response alone —
+    it is advertised only in the route index at /wp-json/.
+  source_operation: openapi/iggenix-settings-api-openapi.yml#getSettings
+- status: 404
+  code: rest_no_route
+  title: No route was found matching the URL and request method
+  observed: false
+  remediation: Check the path against the route index at https://iggenix.com/wp-json/ and confirm the method is listed for that route.
+- status: 400
+  code: rest_invalid_param
+  title: Invalid parameter
+  observed: false
+  remediation: >-
+    data.params names the offending parameters. Most collection parameters are enums or bounded
+    integers — per_page is capped at 100, context is one of view/embed/edit — and the allowed values are
+    carried in the parameter schemas in openapi/.
+- status: 400
+  code: rest_missing_callback_param
+  title: Missing required parameter
+  observed: false
+  remediation: Supply the required parameters declared on the operation.
+- status: 403
+  code: rest_cannot_view
+  title: Not permitted to view this resource in this context
+  observed: false
+  remediation: context=edit and unpublished statuses require an authenticated user with the matching capability.
+- status: 403
+  code: rest_cannot_create
+  title: Not permitted to create
+  observed: false
+  remediation: Writes require an authenticated application password whose user holds the capability for that post type.
+- status: 403
+  code: rest_cannot_delete
+  title: Not permitted to delete
+  observed: false
+  remediation: See reversibility in conventions/iggenix-conventions.yml before retrying a delete.
+- status: 404
+  code: oembed_invalid_url
+  title: oEmbed URL not found
+  observed: true
+  observed_on: 'GET https://iggenix.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Figgenix.com%2Fpublications%2F'
+  observed_body: '{"code":"oembed_invalid_url","message":"Not Found","data":{"status":404}}'
+  remediation: >-
+    The oEmbed provider only resolves URLs that map to a singular post. Archive URLs such as
+    /publications/ are rejected even though they return 200 as HTML. Pass a permalink from the
+    link field of a pressreleases, publications or abstracts item.
+  source_operation: openapi/iggenix-oembed-api-openapi.yml#getOembedEmbed
+- status: 403
+  code: null
+  title: XML-RPC blocked at the edge
+  observed: true
+  observed_on: 'GET https://iggenix.com/xmlrpc.php'
+  remediation: >-
+    Not a REST error — recorded because /xmlrpc.php is still advertised by the site's own x-pingback
+    header while the host returns 403. Use the REST API instead.

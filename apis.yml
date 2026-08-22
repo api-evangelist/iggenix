@@ -1,23 +1,353 @@
 aid: iggenix
 name: IgGenix
-description: 'IgGenix is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'IgGenix, Inc. is a clinical-stage antibody discovery and development company in South San
+  Francisco, California, founded in 2019 on work from Stephen Quake''s laboratory at Stanford in
+  collaboration with allergy clinician-researcher Kari Nadeau. Its SEQ SIFTER platform uses single-cell
+  RNA sequencing to capture the rare IgE-producing B cells circulating in allergic patients'' blood, then
+  re-engineers those sequences into fully human, high-affinity, allergen-specific IgG antibodies designed
+  to block the allergic cascade before it starts. Lead program IGNX001 is a human IgG4 monoclonal antibody
+  for peanut allergy, in the Phase 1 ACCELERATE Peanut trial, with discovery programs against alpha-gal
+  syndrome, nsLTP allergens and atopic dermatitis autoantigens. The company has raised roughly $75M across
+  seed, Series A and a $40M Series B. IgGenix publishes no product or developer API and no developer
+  program; the only machine-readable surface on iggenix.com is the WordPress REST API (wp/v2) served at
+  https://iggenix.com/wp-json/, which returns the company''s press releases, peer-reviewed publications,
+  conference abstracts, careers post type, pages, media library, taxonomies and site search as anonymous
+  JSON. The OpenAPI definitions in this repository were derived mechanically from that route index; IgGenix
+  publishes none of its own.'
 url: https://raw.githubusercontent.com/api-evangelist/iggenix/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
-specificationVersion: '0.20'
+x-tier: profiled
+x-tier-reason: enrichment-pipeline
+image: https://iggenix.com/wp-content/themes/iggenix/img/logo-nav.svg
+specificationVersion: '0.23'
 created: '2026-08-22'
 modified: '2026-08-22'
 tags:
 - Company
-apis: []
+- Biotechnology
+- Life Sciences
+- Immunology
+- Allergy
+- Antibodies
+- Drug Discovery
+- Therapeutics
+- Clinical Trials
+- Pharmaceuticals
+- Research
+- Content
+apis:
+- aid: iggenix:iggenix-press-releases-api
+  name: IgGenix Press Releases API
+  description: >-
+    The press-release custom post type on iggenix.com, exposed as JSON by the WordPress REST API.
+    Anonymously readable; returns the company's corporate and clinical announcements (IGNX001 Phase 1
+    ACCELERATE Peanut enrollment, financing, conference presentations) with rendered titles, dates,
+    slugs and canonical links. 7 operations across 2 paths; the write methods require authentication.
+  humanURL: https://iggenix.com/pressreleases/
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Press Releases
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-press-releases-api-openapi.yml
+  - type: DataModel
+    url: data-model/iggenix-data-model.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+  - type: Examples
+    url: examples/iggenix-examples.yml
+- aid: iggenix:iggenix-publications-api
+  name: IgGenix Publications API
+  description: >-
+    The publications custom post type on iggenix.com, exposed as JSON by the WordPress REST API.
+    Anonymously readable; returns the company's peer-reviewed literature record (Science, Nature
+    Biotechnology, JACI, JACI In Practice, Frontiers in Allergy, JASMS) as structured items.
+    7 operations across 2 paths; the write methods require authentication.
+  humanURL: https://iggenix.com/publications/
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Publications
+  - Research
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-publications-api-openapi.yml
+  - type: DataModel
+    url: data-model/iggenix-data-model.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+  - type: Examples
+    url: examples/iggenix-examples.yml
+- aid: iggenix:iggenix-abstracts-api
+  name: IgGenix Abstracts API
+  description: >-
+    The abstracts custom post type on iggenix.com, exposed as JSON by the WordPress REST API.
+    Anonymously readable; returns conference abstracts and posters (AAAAI/WAO, preclinical and GLP
+    safety toxicology data for IGNX001) with links to the published PDFs. 7 operations across
+    2 paths; the write methods require authentication.
+  humanURL: https://iggenix.com/abstracts/
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Abstracts
+  - Research
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-abstracts-api-openapi.yml
+  - type: DataModel
+    url: data-model/iggenix-data-model.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+- aid: iggenix:iggenix-careers-api
+  name: IgGenix Careers API
+  description: >-
+    The careers custom post type on iggenix.com, exposed as JSON by the WordPress REST API. The route
+    is registered and anonymously readable but the collection is currently empty (HTTP 200, []), and
+    the site publishes no careers page — open roles are directed to HR@IgGenix.com. 7 operations
+    across 2 paths; the write methods require authentication.
+  humanURL: https://iggenix.com/wp-json/wp/v2/careers
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Careers
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-careers-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+- aid: iggenix:iggenix-posts-api
+  name: IgGenix Posts API
+  description: >-
+    The core WordPress posts collection on iggenix.com, exposed as JSON by the WordPress REST API.
+    Anonymously readable but currently empty (HTTP 200, [], X-WP-Total 0) — IgGenix files its news
+    under the pressreleases custom post type rather than core posts. 7 operations across 2 paths;
+    the write methods require authentication.
+  humanURL: https://iggenix.com/feed/
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Posts
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-posts-api-openapi.yml
+  - type: DataModel
+    url: data-model/iggenix-data-model.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+- aid: iggenix:iggenix-pages-api
+  name: IgGenix Pages API
+  description: >-
+    The marketing pages of iggenix.com, exposed as JSON by the WordPress REST API. Anonymously
+    readable and the only reliable way to read several of them: the site's HTML routing is broken and
+    every page URL (including /privacy-policy/ and /the-iggenix-team/) currently serves another
+    company's home page, while the same content is returned correctly from this API.
+    7 operations across 2 paths; the write methods require authentication.
+  humanURL: https://iggenix.com/wp-json/wp/v2/pages
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Pages
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-pages-api-openapi.yml
+  - type: DataModel
+    url: data-model/iggenix-data-model.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+- aid: iggenix:iggenix-media-api
+  name: IgGenix Media API
+  description: >-
+    The iggenix.com media library, exposed as JSON by the WordPress REST API. Anonymously readable;
+    returns image and PDF attachments including the company's published conference posters and
+    journal logos, with every generated size variant. 7 operations across 2 paths; the write methods
+    require authentication.
+  humanURL: https://iggenix.com/wp-json/wp/v2/media
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Media
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-media-api-openapi.yml
+  - type: DataModel
+    url: data-model/iggenix-data-model.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+- aid: iggenix:iggenix-comments-api
+  name: IgGenix Comments API
+  description: >-
+    The WordPress comments collection on iggenix.com. Anonymously readable and currently empty
+    (HTTP 200, []) — comments are not used on this site. 7 operations across 2 paths; the write
+    methods require authentication.
+  humanURL: https://iggenix.com/comments/feed/
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Comments
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-comments-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+- aid: iggenix:iggenix-taxonomy-api
+  name: IgGenix Taxonomy API
+  description: >-
+    Categories, tags and the taxonomy registry for iggenix.com, exposed as JSON by the WordPress REST
+    API. Anonymously readable; categories return one term (Uncategorized) and tags are empty, so the
+    content on this site is organized by post type rather than by taxonomy. 16 operations across
+    6 paths; the write methods require authentication.
+  humanURL: https://iggenix.com/wp-json/wp/v2/taxonomies
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Taxonomy
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-taxonomy-api-openapi.yml
+  - type: DataModel
+    url: data-model/iggenix-data-model.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+- aid: iggenix:iggenix-search-api
+  name: IgGenix Search API
+  description: >-
+    Site-wide search across every public post type on iggenix.com, exposed as JSON by the WordPress
+    REST API. Anonymously readable and the single most useful operation on this surface — a query for
+    "peanut" returns matching press releases, publications and abstracts with their ids, titles,
+    URLs and subtypes. 1 operation, read-only.
+  humanURL: https://iggenix.com/wp-json/wp/v2/search
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Search
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-search-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+  - type: Examples
+    url: examples/iggenix-examples.yml
+- aid: iggenix:iggenix-users-api
+  name: IgGenix Users API
+  description: >-
+    The WordPress authors collection on iggenix.com. Anonymously readable and returns the display
+    names, slugs, author-archive links and Gravatar hashes of the staff accounts that publish content.
+    This is personal data exposed by a default WordPress configuration; API Evangelist documents the
+    route structurally and deliberately excludes it from the generated agent skills and MCP tool
+    candidates. 12 operations across 3 paths; the write methods require authentication.
+  humanURL: https://iggenix.com/wp-json/wp/v2/users
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - User
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-users-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+- aid: iggenix:iggenix-settings-api
+  name: IgGenix Settings API
+  description: >-
+    The WordPress site-settings resource on iggenix.com. Registered but authentication-gated — an
+    anonymous GET returns HTTP 401 rest_forbidden — so the settings themselves could not be read.
+    4 operations on 1 path, all requiring WordPress Application Passwords.
+  humanURL: https://iggenix.com/wp-json/wp/v2/settings
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-settings-api-openapi.yml
+  - type: Authentication
+    url: authentication/iggenix-authentication.yml
+- aid: iggenix:iggenix-discovery-api
+  name: IgGenix Discovery API
+  description: >-
+    The route, namespace, post-type and post-status discovery surface of the iggenix.com WordPress
+    REST API. Anonymously readable; GET / returns the full 148-route index across 7 namespaces and is
+    the document every OpenAPI in this repository was derived from. 6 operations across 6 paths,
+    read-only.
+  humanURL: https://iggenix.com/wp-json/
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - Discovery
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-discovery-api-openapi.yml
+  - type: ErrorCatalog
+    url: errors/iggenix-problem-types.yml
+- aid: iggenix:iggenix-oembed-api
+  name: IgGenix oEmbed API
+  description: >-
+    The oEmbed 1.0 provider endpoints iggenix.com registers, exposed as JSON by the WordPress REST
+    API. Anonymously readable; returns an oEmbed rich/link response for any iggenix.com URL, which is
+    how third-party sites render an embed card for an IgGenix press release. 2 operations across
+    2 paths, read-only.
+  humanURL: https://iggenix.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Figgenix.com%2F
+  baseURL: https://iggenix.com/wp-json
+  tags:
+  - oEmbed
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/iggenix-oembed-api-openapi.yml
+  - type: Conformance
+    url: conformance/iggenix-conformance.yml
+x-enrichment:
+  date: '2026-08-22'
+  status: enriched
+  artifacts_added: 37
+  pass: local-v1
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/iggenix-agentic-access.yml
 - type: Website
+  url: https://iggenix.com/
+- type: Press
+  url: https://iggenix.com/pressreleases/
+- type: Publications
+  url: https://iggenix.com/publications/
+- type: Abstracts
+  url: https://iggenix.com/abstracts/
+- type: BlogRSS
+  url: https://iggenix.com/feed/
+- type: Support
+  url: mailto:info@IgGenix.com
+- type: LinkedIn
+  url: https://www.linkedin.com/company/iggenix-inc/
+- type: SecondaryMarket
   url: https://www.nasdaqprivatemarket.com/
+- type: Overlay
+  url: overlays/iggenix-content-overlay.yaml
+- type: Packages
+  url: packages/iggenix-packages.yml
+- type: LLMsTxt
+  url: llms/iggenix-llms.txt
+- type: Authentication
+  url: authentication/iggenix-authentication.yml
+- type: Conventions
+  url: conventions/iggenix-conventions.yml
+- type: Conformance
+  url: conformance/iggenix-conformance.yml
+- type: ErrorCatalog
+  url: errors/iggenix-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/iggenix-lifecycle.yml
+- type: DataModel
+  url: data-model/iggenix-data-model.yml
+- type: Examples
+  url: examples/iggenix-examples.yml
+- type: RateLimits
+  url: rate-limits/iggenix-rate-limits.yml
+- type: Plans
+  url: plans/iggenix-plans-pricing.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: DomainSecurity
+  url: security/iggenix-domain-security.yml
