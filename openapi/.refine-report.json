@@ -1,0 +1,42 @@
+{
+  "provider": "iggenix",
+  "sources": [
+    "iggenix-abstracts-api-openapi.yml",
+    "iggenix-careers-api-openapi.yml",
+    "iggenix-comments-api-openapi.yml",
+    "iggenix-discovery-api-openapi.yml",
+    "iggenix-media-api-openapi.yml",
+    "iggenix-oembed-api-openapi.yml",
+    "iggenix-pages-api-openapi.yml",
+    "iggenix-posts-api-openapi.yml",
+    "iggenix-press-releases-api-openapi.yml",
+    "iggenix-publications-api-openapi.yml",
+    "iggenix-search-api-openapi.yml",
+    "iggenix-settings-api-openapi.yml",
+    "iggenix-taxonomy-api-openapi.yml",
+    "iggenix-users-api-openapi.yml"
+  ],
+  "outputs": [
+    "iggenix-abstracts-api-openapi.yml",
+    "iggenix-careers-api-openapi.yml",
+    "iggenix-comments-api-openapi.yml",
+    "iggenix-discovery-api-openapi.yml",
+    "iggenix-media-api-openapi.yml",
+    "iggenix-oembed-api-openapi.yml",
+    "iggenix-pages-api-openapi.yml",
+    "iggenix-posts-api-openapi.yml",
+    "iggenix-press-releases-api-openapi.yml",
+    "iggenix-publications-api-openapi.yml",
+    "iggenix-search-api-openapi.yml",
+    "iggenix-settings-api-openapi.yml",
+    "iggenix-taxonomy-api-openapi.yml",
+    "iggenix-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}
