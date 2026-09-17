@@ -66,10 +66,10 @@ apis:
 - aid: iggenix:iggenix-press-releases-api
   name: IgGenix Press Releases API
   description: >-
-    The press-release custom post type on iggenix.com, exposed as JSON by the WordPress REST API.
-    Anonymously readable; returns the company's corporate and clinical announcements (IGNX001 Phase 1
-    ACCELERATE Peanut enrollment, financing, conference presentations) with rendered titles, dates,
-    slugs and canonical links. 7 operations across 2 paths; the write methods require authentication.
+    The press-release custom post type on iggenix.com, exposed as JSON by the WordPress REST API. Anonymously
+    readable; returns the company's corporate and clinical announcements (IGNX001 Phase 1 ACCELERATE Peanut
+    enrollment, financing, conference presentations) with rendered titles, dates, slugs and canonical
+    links. 7 operations across 2 paths; the write methods require authentication.
   humanURL: https://iggenix.com/pressreleases/
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -87,10 +87,10 @@ apis:
 - aid: iggenix:iggenix-publications-api
   name: IgGenix Publications API
   description: >-
-    The publications custom post type on iggenix.com, exposed as JSON by the WordPress REST API.
-    Anonymously readable; returns the company's peer-reviewed literature record (Science, Nature
-    Biotechnology, JACI, JACI In Practice, Frontiers in Allergy, JASMS) as structured items.
-    7 operations across 2 paths; the write methods require authentication.
+    The publications custom post type on iggenix.com, exposed as JSON by the WordPress REST API. Anonymously
+    readable; returns the company's peer-reviewed literature record (Science, Nature Biotechnology, JACI,
+    JACI In Practice, Frontiers in Allergy, JASMS) as structured items. 7 operations across 2 paths; the
+    write methods require authentication.
   humanURL: https://iggenix.com/publications/
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -108,10 +108,10 @@ apis:
 - aid: iggenix:iggenix-abstracts-api
   name: IgGenix Abstracts API
   description: >-
-    The abstracts custom post type on iggenix.com, exposed as JSON by the WordPress REST API.
-    Anonymously readable; returns conference abstracts and posters (AAAAI/WAO, preclinical and GLP
-    safety toxicology data for IGNX001) with links to the published PDFs. 7 operations across
-    2 paths; the write methods require authentication.
+    The abstracts custom post type on iggenix.com, exposed as JSON by the WordPress REST API. Anonymously
+    readable; returns conference abstracts and posters (AAAAI/WAO, preclinical and GLP safety toxicology
+    data for IGNX001) with links to the published PDFs. 7 operations across 2 paths; the write methods
+    require authentication.
   humanURL: https://iggenix.com/abstracts/
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -128,9 +128,9 @@ apis:
   name: IgGenix Careers API
   description: >-
     The careers custom post type on iggenix.com, exposed as JSON by the WordPress REST API. The route
-    is registered and anonymously readable but the collection is currently empty (HTTP 200, []), and
-    the site publishes no careers page — open roles are directed to HR@IgGenix.com. 7 operations
-    across 2 paths; the write methods require authentication.
+    is registered and anonymously readable but the collection is currently empty (HTTP 200, []), and the
+    site publishes no careers page — open roles are directed to HR@IgGenix.com. 7 operations across 2
+    paths; the write methods require authentication.
   humanURL: https://iggenix.com/wp-json/wp/v2/careers
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -144,10 +144,9 @@ apis:
 - aid: iggenix:iggenix-posts-api
   name: IgGenix Posts API
   description: >-
-    The core WordPress posts collection on iggenix.com, exposed as JSON by the WordPress REST API.
-    Anonymously readable but currently empty (HTTP 200, [], X-WP-Total 0) — IgGenix files its news
-    under the pressreleases custom post type rather than core posts. 7 operations across 2 paths;
-    the write methods require authentication.
+    The core WordPress posts collection on iggenix.com, exposed as JSON by the WordPress REST API. Anonymously
+    readable but currently empty (HTTP 200, [], X-WP-Total 0) — IgGenix files its news under the pressreleases
+    custom post type rather than core posts. 7 operations across 2 paths; the write methods require authentication.
   humanURL: https://iggenix.com/feed/
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -163,11 +162,11 @@ apis:
 - aid: iggenix:iggenix-pages-api
   name: IgGenix Pages API
   description: >-
-    The marketing pages of iggenix.com, exposed as JSON by the WordPress REST API. Anonymously
-    readable and the only reliable way to read several of them: the site's HTML routing is broken and
-    every page URL (including /privacy-policy/ and /the-iggenix-team/) currently serves another
-    company's home page, while the same content is returned correctly from this API.
-    7 operations across 2 paths; the write methods require authentication.
+    The marketing pages of iggenix.com, exposed as JSON by the WordPress REST API. Anonymously readable
+    and the only reliable way to read several of them: the site's HTML routing is broken and every page
+    URL (including /privacy-policy/ and /the-iggenix-team/) currently serves another company's home page,
+    while the same content is returned correctly from this API. 7 operations across 2 paths; the write
+    methods require authentication.
   humanURL: https://iggenix.com/wp-json/wp/v2/pages
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -183,10 +182,9 @@ apis:
 - aid: iggenix:iggenix-media-api
   name: IgGenix Media API
   description: >-
-    The iggenix.com media library, exposed as JSON by the WordPress REST API. Anonymously readable;
-    returns image and PDF attachments including the company's published conference posters and
-    journal logos, with every generated size variant. 7 operations across 2 paths; the write methods
-    require authentication.
+    The iggenix.com media library, exposed as JSON by the WordPress REST API. Anonymously readable; returns
+    image and PDF attachments including the company's published conference posters and journal logos,
+    with every generated size variant. 7 operations across 2 paths; the write methods require authentication.
   humanURL: https://iggenix.com/wp-json/wp/v2/media
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -202,9 +200,8 @@ apis:
 - aid: iggenix:iggenix-comments-api
   name: IgGenix Comments API
   description: >-
-    The WordPress comments collection on iggenix.com. Anonymously readable and currently empty
-    (HTTP 200, []) — comments are not used on this site. 7 operations across 2 paths; the write
-    methods require authentication.
+    The WordPress comments collection on iggenix.com. Anonymously readable and currently empty (HTTP 200,
+    []) — comments are not used on this site. 7 operations across 2 paths; the write methods require authentication.
   humanURL: https://iggenix.com/comments/feed/
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -219,9 +216,9 @@ apis:
   name: IgGenix Taxonomy API
   description: >-
     Categories, tags and the taxonomy registry for iggenix.com, exposed as JSON by the WordPress REST
-    API. Anonymously readable; categories return one term (Uncategorized) and tags are empty, so the
-    content on this site is organized by post type rather than by taxonomy. 16 operations across
-    6 paths; the write methods require authentication.
+    API. Anonymously readable; categories return one term (Uncategorized) and tags are empty, so the content
+    on this site is organized by post type rather than by taxonomy. 16 operations across 6 paths; the
+    write methods require authentication.
   humanURL: https://iggenix.com/wp-json/wp/v2/taxonomies
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -237,10 +234,10 @@ apis:
 - aid: iggenix:iggenix-search-api
   name: IgGenix Search API
   description: >-
-    Site-wide search across every public post type on iggenix.com, exposed as JSON by the WordPress
-    REST API. Anonymously readable and the single most useful operation on this surface — a query for
-    "peanut" returns matching press releases, publications and abstracts with their ids, titles,
-    URLs and subtypes. 1 operation, read-only.
+    Site-wide search across every public post type on iggenix.com, exposed as JSON by the WordPress REST
+    API. Anonymously readable and the single most useful operation on this surface — a query for "peanut"
+    returns matching press releases, publications and abstracts with their ids, titles, URLs and subtypes.
+    1 operation, read-only.
   humanURL: https://iggenix.com/wp-json/wp/v2/search
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -256,11 +253,11 @@ apis:
 - aid: iggenix:iggenix-users-api
   name: IgGenix Users API
   description: >-
-    The WordPress authors collection on iggenix.com. Anonymously readable and returns the display
-    names, slugs, author-archive links and Gravatar hashes of the staff accounts that publish content.
-    This is personal data exposed by a default WordPress configuration; API Evangelist documents the
-    route structurally and deliberately excludes it from the generated agent skills and MCP tool
-    candidates. 12 operations across 3 paths; the write methods require authentication.
+    The WordPress authors collection on iggenix.com. Anonymously readable and returns the display names,
+    slugs, author-archive links and Gravatar hashes of the staff accounts that publish content. This is
+    personal data exposed by a default WordPress configuration; API Evangelist documents the route structurally
+    and deliberately excludes it from the generated agent skills and MCP tool candidates. 12 operations
+    across 3 paths; the write methods require authentication.
   humanURL: https://iggenix.com/wp-json/wp/v2/users
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -274,9 +271,9 @@ apis:
 - aid: iggenix:iggenix-settings-api
   name: IgGenix Settings API
   description: >-
-    The WordPress site-settings resource on iggenix.com. Registered but authentication-gated — an
-    anonymous GET returns HTTP 401 rest_forbidden — so the settings themselves could not be read.
-    4 operations on 1 path, all requiring WordPress Application Passwords.
+    The WordPress site-settings resource on iggenix.com. Registered but authentication-gated — an anonymous
+    GET returns HTTP 401 rest_forbidden — so the settings themselves could not be read. 4 operations on
+    1 path, all requiring WordPress Application Passwords.
   humanURL: https://iggenix.com/wp-json/wp/v2/settings
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -289,10 +286,9 @@ apis:
 - aid: iggenix:iggenix-discovery-api
   name: IgGenix Discovery API
   description: >-
-    The route, namespace, post-type and post-status discovery surface of the iggenix.com WordPress
-    REST API. Anonymously readable; GET / returns the full 148-route index across 7 namespaces and is
-    the document every OpenAPI in this repository was derived from. 6 operations across 6 paths,
-    read-only.
+    The route, namespace, post-type and post-status discovery surface of the iggenix.com WordPress REST
+    API. Anonymously readable; GET / returns the full 148-route index across 7 namespaces and is the document
+    every OpenAPI in this repository was derived from. 6 operations across 6 paths, read-only.
   humanURL: https://iggenix.com/wp-json/
   baseURL: https://iggenix.com/wp-json
   tags:
@@ -303,21 +299,16 @@ apis:
     url: openapi/iggenix-discovery-api-openapi.yml
   - type: ErrorCatalog
     url: errors/iggenix-problem-types.yml
-- aid: iggenix:iggenix-oembed-api
-  name: IgGenix oEmbed API
-  description: >-
-    The oEmbed 1.0 provider endpoints iggenix.com registers, exposed as JSON by the WordPress REST
-    API. Anonymously readable; returns an oEmbed rich/link response for any iggenix.com URL, which is
-    how third-party sites render an embed card for an IgGenix press release. 2 operations across
-    2 paths, read-only.
-  humanURL: https://iggenix.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Figgenix.com%2F
+- aid: iggenix:iggenix-o-embed-api
+  name: IgGenix o Embed API
+  description: The o Embed API from IgGenix — 2 operation(s) for o embed.
+  humanURL: https://iggenix.com/pressreleases/
   baseURL: https://iggenix.com/wp-json
   tags:
-  - oEmbed
-  - Content
+  - o Embed
   properties:
   - type: OpenAPI
-    url: openapi/iggenix-oembed-api-openapi.yml
+    url: openapi/iggenix-o-embed-api-openapi.yml
   - type: Conformance
     url: conformance/iggenix-conformance.yml
 x-enrichment:
