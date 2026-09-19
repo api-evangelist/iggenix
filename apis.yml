@@ -305,6 +305,8 @@ apis:
   humanURL: https://iggenix.com/pressreleases/
   baseURL: https://iggenix.com/wp-json
   tags:
+  - oEmbed
+  tags_raw:
   - o Embed
   properties:
   - type: OpenAPI
