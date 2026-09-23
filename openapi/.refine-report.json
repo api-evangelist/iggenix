@@ -1,20 +1,7 @@
 {
   "provider": "iggenix",
   "sources": [
-    "iggenix-abstracts-api-openapi.yml",
-    "iggenix-careers-api-openapi.yml",
-    "iggenix-comments-api-openapi.yml",
-    "iggenix-discovery-api-openapi.yml",
-    "iggenix-media-api-openapi.yml",
-    "iggenix-oembed-api-openapi.yml",
-    "iggenix-pages-api-openapi.yml",
-    "iggenix-posts-api-openapi.yml",
-    "iggenix-press-releases-api-openapi.yml",
-    "iggenix-publications-api-openapi.yml",
-    "iggenix-search-api-openapi.yml",
-    "iggenix-settings-api-openapi.yml",
-    "iggenix-taxonomy-api-openapi.yml",
-    "iggenix-users-api-openapi.yml"
+    "_ae-authored/iggenix-content-openapi.yml"
   ],
   "outputs": [
     "iggenix-abstracts-api-openapi.yml",
@@ -22,7 +9,6 @@
     "iggenix-comments-api-openapi.yml",
     "iggenix-discovery-api-openapi.yml",
     "iggenix-media-api-openapi.yml",
-    "iggenix-oembed-api-openapi.yml",
     "iggenix-pages-api-openapi.yml",
     "iggenix-posts-api-openapi.yml",
     "iggenix-press-releases-api-openapi.yml",
@@ -30,13 +16,33 @@
     "iggenix-search-api-openapi.yml",
     "iggenix-settings-api-openapi.yml",
     "iggenix-taxonomy-api-openapi.yml",
-    "iggenix-users-api-openapi.yml"
+    "iggenix-users-api-openapi.yml",
+    "iggenix-oembed-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
   "notes": [
-    "apis.yml register: already-registered"
+    "sourced from openapi/_original/ (0 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "superseded outputs removed: iggenix-o-embed-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 14 total)"
   ],
-  "skipped": []
+  "skipped": [
+    "iggenix-abstracts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-careers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-comments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-o-embed-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-pages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-posts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-press-releases-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-publications-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-settings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-taxonomy-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "iggenix-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
